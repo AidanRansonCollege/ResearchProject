@@ -27,9 +27,13 @@
 }
 
 .image{
+    display: flex;
     border-radius: 3%;
     background-color: darkgray;
     flex-basis:50%;
+    font-size: 5em;
+    justify-content: center;
+    align-items: center;
 }
 
 .button-wrapper{
@@ -41,5 +45,5 @@
 
 .button{
     flex-basis: 30%;
-    
+    font-size: 4em;
 }
