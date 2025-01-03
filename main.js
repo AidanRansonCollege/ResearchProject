@@ -1,4 +1,5 @@
 //Global Variables
+var testingChar;
 var isCorrectProgramming;
 var startTimeProgramming;
 var endTimeProgramming;
@@ -13,7 +14,7 @@ var destination = "testing.html";
 var resultsScreen = "results.html";
 const LinearB = "𐀀𐀁𐀂𐀃𐀄𐀅𐀆𐀇𐀈𐀉𐀊𐀋𐀍𐀎𐀏𐀐𐀑𐀒𐀓𐀔𐀕𐀖𐀗𐀘𐀙𐀚𐀛𐀜𐀝𐀞𐀟𐀠𐀡𐀢𐀣𐀤𐀥𐀦𐀨𐀩𐀪𐀫𐀬𐀭𐀮𐀯𐀰𐀱𐀲𐀳𐀴𐀵𐀶𐀷𐀸𐀹𐀺𐀼𐀽𐀿𐁀𐁁𐁂𐁃𐁄𐁅𐁆𐁇𐁈𐁉𐁊𐁋𐁌𐁍";
 var availableChar = Array.from(LinearB);
-var testingChar;
+
 
 //Global Functions
 
