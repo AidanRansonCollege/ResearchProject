@@ -4,6 +4,7 @@ var isCorrectProgramming;
 var startTimeProgramming;
 var endTimeProgramming;
 var timeElapsedProgramming;
+var testCharIndex;
 /////////////////
 var isCorrectTesting;
 var startTimeTesting;
@@ -68,7 +69,7 @@ const CircleOnly4 = new Symbol("circle", "green", null, null, null);
 const CircleOnly5 = new Symbol("circle", "yellow", null, null, null);
 
 
-var availableChar = [SquareOnly, SquareOnly2, SquareOnly3, SquareOnly4, CircleOnly, CircleOnly2, CircleOnly3, CircleOnly4, CircleOnly5];
+var availableChar = [SquareOnly, SquareOnly2, SquareOnly3, SquareOnly4, SquareOnly5, CircleOnly, CircleOnly2, CircleOnly3, CircleOnly4, CircleOnly5];
 //Global Functions
 
 
@@ -77,6 +78,7 @@ function SaveProgramming(){
     sessionStorage.setItem('testingChar', JSON.stringify(testingChar));
     sessionStorage.setItem('timeElapsedProgramming', timeElapsedProgramming);
     sessionStorage.setItem('isCorrectProgramming', isCorrectProgramming);
+    sessionStorage.setItem('testCharIndex', testCharIndex)
 }
 
 function SaveTesting(){
@@ -118,12 +120,14 @@ function CorrectTesting(){
 function ProgrammingPhase(){
     startTimeProgramming = new Date()
 
+    console.log(availableChar);
     var buttons = document.getElementsByClassName("button");
     const canvases = [
         document.getElementById("canvas1"),
         document.getElementById("canvas2"),
         document.getElementById("canvas3")
     ];
+    
 
     for(let i = 0; i < buttons.length; i++){
         randomChar = Math.floor(Math.random() * availableChar.length)
@@ -135,12 +139,12 @@ function ProgrammingPhase(){
     }
 
     var trueButtonIndex = Math.floor(Math.random() * buttons.length)
-    var goalChar = Math.floor(Math.random() * availableChar.length);
+    testCharIndex = Math.floor(Math.random() * availableChar.length)
     var trueButton = buttons[trueButtonIndex];
     var trueCanvas = canvases[trueButtonIndex];
 
-    testingChar = availableChar[goalChar];
-    availableChar.splice(goalChar,1);
+    testingChar = availableChar[testCharIndex];
+    availableChar.splice(testCharIndex,1);
     ctx=trueCanvas.getContext("2d");
     ctx.clearRect(0,0, trueCanvas.width, trueCanvas.height);
     Draw(ctx, testingChar, trueCanvas.width, trueCanvas.height);
@@ -156,7 +160,6 @@ function ProgrammingPhase(){
 function TestingPhase(){
     startTimeTesting = new Date();
     var testingChar = JSON.parse(sessionStorage.getItem('testingChar'));
-    var testingCharIndex = sessionStorage.getItem('testingCharIndex');
     var buttons = document.getElementsByClassName("button");
     const canvases = [
         document.getElementById("canvas1"),
@@ -169,8 +172,16 @@ function TestingPhase(){
         document.getElementById("canvas8"),
         document.getElementById("canvas9")
     ];
-    
-    availableChar.splice(testingCharIndex, 1);
+
+
+    for(let i =0; i < availableChar.length; i++){
+        
+        if (availableChar[i].shape1 == testingChar.shape1 && availableChar[i].color1 == testingChar.color1 && availableChar[i].shape2 == testingChar.shape2 && availableChar[i].color2 == testingChar.color2 && availableChar[i].shape2pos == testingChar.shape2pos){
+            availableChar.splice(i, 1);
+        }
+    }
+
+    console.log(availableChar);
 
     for(let i = 0; i < buttons.length; i++){
         randomChar = Math.floor(Math.random() * availableChar.length)
@@ -182,6 +193,7 @@ function TestingPhase(){
     }
 
     var trueButtonIndex = Math.floor(Math.random() * buttons.length)
+    console.log(trueButtonIndex); 
     var trueButton = buttons[trueButtonIndex];
     var trueCanvas = canvases[trueButtonIndex];
     //trueButton.textContent = testingChar;
