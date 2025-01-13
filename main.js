@@ -6,10 +6,12 @@ var endTimeProgramming;
 var timeElapsedProgramming;
 var testCharIndex;
 /////////////////
+var symbols = [];
 var isCorrectTesting;
 var startTimeTesting;
 var endTimeTesting;
 var timeElapsedTesting;
+var score = 0;
 /////////////////
 var destination = "testing.html";
 var resultsScreen = "results.html";
@@ -50,19 +52,47 @@ function Draw(ctx, symbol, width, height){
     }
     else if(symbol.shape1 == "circle"){
         actx.beginPath();
-        actx.arc(x, y, 40, 0, 2 * Math.PI);
+        actx.arc(x, y-20, 40, 0, 2 * Math.PI);
+        actx.stroke();
+    }
+
+    actx.strokeStyle = symbol.color2;
+
+    if(symbol.shape2pos == "left"){
+        x=x-50;
+        y=y-10;
+    }
+    else if(symbol.shape2pos == "right"){
+        x=x+65;
+        y=y-10;
+    }
+    else if(symbol.shape2pos == "upper"){
+        y=y-25;
+    }
+    else if(symbol.shape2pos == "lower"){
+        y=y+42;
+    }
+
+
+    if(symbol.shape2 == "square"){
+        actx.beginPath();
+        actx.moveTo(x-(x/8),y+(y/8));
+        actx.lineTo(x+(x/8), y+(y/8));
+        actx.lineTo(x+(x/8), y+(y/8) - 37.5);
+        actx.lineTo(x-(x/8), y+(y/8) - 37.5);
+        actx.lineTo(x-(x/8),y+(y/8))
         actx.stroke();
     }
 
 }
 
 //////////////     Symbol (Shape1, Color1, Shape2, Color2, Shape2 Position)
-const SquareOnly = new Symbol("square", "red", null, null, null);
+const SquareOnly = new Symbol("square", "red", "square", "black", "lower");
 const SquareOnly2 = new Symbol("square", "black", null, null, null);
 const SquareOnly3 = new Symbol("square", "blue", null, null, null);
 const SquareOnly4 = new Symbol("square", "yellow", null, null, null);
 const SquareOnly5 = new Symbol("square", "green", null, null, null);
-const CircleOnly = new Symbol("circle", "black", null, null, null);
+const CircleOnly = new Symbol("circle", "black", "square", "red", "upper");
 const CircleOnly2 = new Symbol("circle", "red", null, null, null);
 const CircleOnly3 = new Symbol("circle", "blue", null, null, null);
 const CircleOnly4 = new Symbol("circle", "green", null, null, null);
@@ -84,6 +114,35 @@ function SaveProgramming(){
 function SaveTesting(){
     sessionStorage.setItem('timeElapsedTesting', timeElapsedTesting);
     sessionStorage.setItem('isCorrectTesting', isCorrectTesting);
+    sessionStorage.setItem('score', score);
+}
+
+function ScoreSymbol(symbol){
+    score = 0;
+    var testingChar = JSON.parse(sessionStorage.getItem('testingChar'));
+
+    if(symbol.shape1 == testingChar.shape1 && symbol.shape1 !== null){
+        score += 1;
+        console.log("Same Shape");
+    }
+
+    if(symbol.color1 == testingChar.color1 && symbol.shape1 !== null){
+        score += 1;
+        console.log("Same Shape");
+    }
+
+    if(symbol.shape2 == testingChar.shape2 && symbol.shape1 !== null){
+        score += 1;
+    }    
+    
+    if(symbol.color2 == testingChar.color2 && symbol.shape1 !== null){
+        score += 1;
+    }
+
+    if(symbol.shape2pos == testingChar.shape2pos && symbol.shape1 !== null){
+        score += 1;
+    }    
+    
 }
 
 function IncorrectProgramming(){
@@ -105,6 +164,8 @@ function IncorrectTesting(){
     isCorrectTesting = false;
     endTimeTesting = new Date();
     timeElapsedTesting = endTimeTesting - startTimeTesting;
+    ScoreSymbol(symbols[this.id]);
+    sessionStorage.setItem("chosenChar", JSON.stringify(symbols[this.id]));
     SaveTesting()
     window.location.href = resultsScreen;
 }
@@ -113,14 +174,18 @@ function CorrectTesting(){
     isCorrectTesting = true;
     endTimeTesting = new Date();
     timeElapsedTesting = endTimeTesting - startTimeTesting;
+    ScoreSymbol(symbols[this.id]);
+    sessionStorage.setItem("chosenChar", JSON.stringify(symbols[this.id]));
     SaveTesting()
     window.location.href = resultsScreen;
 }
 
+
+//////////////////////////////////// Phases ////////////////////////////////////////////////////
+
 function ProgrammingPhase(){
     startTimeProgramming = new Date()
 
-    console.log(availableChar);
     var buttons = document.getElementsByClassName("button");
     const canvases = [
         document.getElementById("canvas1"),
@@ -138,8 +203,8 @@ function ProgrammingPhase(){
         buttons[i].addEventListener("click", IncorrectProgramming);
     }
 
-    var trueButtonIndex = Math.floor(Math.random() * buttons.length)
     testCharIndex = Math.floor(Math.random() * availableChar.length)
+    var trueButtonIndex = Math.floor(Math.random() * buttons.length)
     var trueButton = buttons[trueButtonIndex];
     var trueCanvas = canvases[trueButtonIndex];
 
@@ -161,6 +226,8 @@ function TestingPhase(){
     startTimeTesting = new Date();
     var testingChar = JSON.parse(sessionStorage.getItem('testingChar'));
     var buttons = document.getElementsByClassName("button");
+
+
     const canvases = [
         document.getElementById("canvas1"),
         document.getElementById("canvas2"),
@@ -181,21 +248,23 @@ function TestingPhase(){
         }
     }
 
-    console.log(availableChar);
 
     for(let i = 0; i < buttons.length; i++){
         randomChar = Math.floor(Math.random() * availableChar.length)
         //buttons[i].textContent = availableChar[randomChar].shape1;
         ctx = canvases[i].getContext("2d");
         Draw(ctx, availableChar[randomChar], canvases[i].width, canvases[i].height);
+        symbols[i] = availableChar[randomChar];
         availableChar.splice(randomChar, 1);
         buttons[i].addEventListener("click", IncorrectTesting);
     }
 
+    console.log(symbols[0]);
+
     var trueButtonIndex = Math.floor(Math.random() * buttons.length)
-    console.log(trueButtonIndex); 
     var trueButton = buttons[trueButtonIndex];
     var trueCanvas = canvases[trueButtonIndex];
+    symbols[trueButtonIndex] = testingChar;
     //trueButton.textContent = testingChar;
     ctx=trueCanvas.getContext("2d");
     ctx.clearRect(0,0, trueCanvas.width, trueCanvas.height);
@@ -212,11 +281,14 @@ function Results(){
     
     var timeElapsedTesting = sessionStorage.getItem('timeElapsedTesting')/1000;
     var isCorrectTesting = sessionStorage.getItem('isCorrectTesting');
+    var theChosenChar = sessionStorage.getItem('chosenChar');
+    var finalscore = sessionStorage.getItem('score');
 
 
     //CHANGE DEPENDING ON HOW RESULTS NEED TO BE STORED
     document.getElementById("ProgrammingResults").textContent = "Time: " + timeElapsedProgramming + "s \n" + "Was Correct: " + isCorrectProgramming;
     document.getElementById("TestingResults").textContent = "Time: " + timeElapsedTesting + "s \n" + "Was Correct: " + isCorrectTesting;
     document.getElementById("TestingChar").textContent = testingChar;
-
+    document.getElementById("ChosenChar").textContent = theChosenChar;
+    document.getElementById("Score").textContent = finalscore;
 }
