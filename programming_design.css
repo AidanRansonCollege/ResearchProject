@@ -28,8 +28,6 @@
 
 .image{
     display: flex;
-    border-radius: 3%;
-    background-color: darkgray;
     flex-basis:50%;
     font-size: 5em;
     justify-content: center;
@@ -46,6 +44,8 @@
 .button{
     flex-basis: 30%;
     font-size: 4em;
+    background: none;
+    border: none;
 }
 
 canvas {

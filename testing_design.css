@@ -29,4 +29,6 @@
 .button{
     flex-basis: 30%;
     font-size: 4em;
+    background: none;
+    border: none;
 }
