@@ -1,22 +1,17 @@
-//Global Variables
-var testingChar;
-var isCorrectProgramming;
-var startTimeProgramming;
-var endTimeProgramming;
-var timeElapsedProgramming;
-var testCharIndex;
-/////////////////
-var symbols = [];
-var isCorrectTesting;
-var startTimeTesting;
-var endTimeTesting;
-var timeElapsedTesting;
-var score = 0;
-/////////////////
-var destination = "testing.html";
-var resultsScreen = "results.html";
-//const LinearB = "𐀀𐀁𐀂𐀃𐀄𐀅𐀆𐀇𐀈𐀉𐀊𐀋𐀍𐀎𐀏𐀐𐀑𐀒𐀓𐀔𐀕𐀖𐀗𐀘𐀙𐀚𐀛𐀜𐀝𐀞𐀟𐀠𐀡𐀢𐀣𐀤𐀥𐀦𐀨𐀩𐀪𐀫𐀬𐀭𐀮𐀯𐀰𐀱𐀲𐀳𐀴𐀵𐀶𐀷𐀸𐀹𐀺𐀼𐀽𐀿𐁀𐁁𐁂𐁃𐁄𐁅𐁆𐁇𐁈𐁉𐁊𐁋𐁌𐁍";
-//var availableChar = Array.from(LinearB);
+//Variables Used
+//Global Var
+var goalChars = [];
+var extraChars = [];
+var iterations = 3;
+var index = 0;
+var nextScreen = "testing.html";
+
+
+//Programming Vars
+var programmingTimes = [];
+
+
+
 
 
 //Classes
@@ -30,6 +25,80 @@ class Symbol {
     }
 }
 
+///////////////////////// Functions ////////////////////////
+
+function NonRepeatingValues(length){
+    var values = [];
+    var possibleValues = [1, 2, 3, 4, 5, 6, 7, 8, 9];
+
+    for(let i=0; i<length; i++){
+        let randomIndex = Math.floor(Math.random() * possibleValues.length);
+        console.log(possibleValues[randomIndex]);
+        values.push(possibleValues[randomIndex]);
+        possibleValues.splice(randomIndex, 1);
+    }
+
+    console.log(values);
+
+    return values;
+}
+
+function SaveProgramming(){
+    sessionStorage.setItem('goalChars', JSON.stringify(goalChars));
+    sessionStorage.setItem('extraChars', JSON.stringify(extraChars));
+    sessionStorage.setItem('iterations', iterations);
+}
+
+function CorrectProgramming(){
+    console.log(extraChars);
+    console.log("Correct");
+    if(index < iterations - 1){
+        index += 1;
+        console.log("Index " + index);
+        ProgrammingPhase(index);
+        
+    }
+    else{
+        SaveProgramming()
+        window.location.href = nextScreen;
+    }
+}
+
+function CorrectTesting(){
+    console.log("Correct");
+    if(index < iterations -1){
+        console.log(index);
+        index += 1;
+    }
+    else{
+        console.log("Done");
+    }
+}
+
+function IncorrectTesting(){
+    console.log("Correct");
+    if(index < iterations -1){
+        console.log(index);
+        index += 1;
+    }
+    else{
+        console.log("Done");
+    }
+}
+
+
+function IncorrectProgramming(){
+    console.log("Incorrect");
+    if(index < iterations - 1){
+        index += 1;
+        console.log("Index " + index);
+        ProgrammingPhase(index);
+    }
+    else{
+        SaveProgramming()
+        window.location.href = nextScreen;
+    }
+}
 
 function Draw(ctx, symbol, width, height){
     var actx = ctx;
@@ -83,152 +152,123 @@ function Draw(ctx, symbol, width, height){
         actx.lineTo(x-(x/8),y+(y/8))
         actx.stroke();
     }
-
-}
-
-//////////////     Symbol (Shape1, Color1, Shape2, Color2, Shape2 Position)
-const SquareOnly = new Symbol("square", "red", "square", "black", "lower");
-const SquareOnly2 = new Symbol("square", "black", null, null, null);
-const SquareOnly3 = new Symbol("square", "blue", null, null, null);
-const SquareOnly4 = new Symbol("square", "yellow", null, null, null);
-const SquareOnly5 = new Symbol("square", "green", null, null, null);
-const CircleOnly = new Symbol("circle", "black", "square", "red", "upper");
-const CircleOnly2 = new Symbol("circle", "red", null, null, null);
-const CircleOnly3 = new Symbol("circle", "blue", null, null, null);
-const CircleOnly4 = new Symbol("circle", "green", null, null, null);
-const CircleOnly5 = new Symbol("circle", "yellow", null, null, null);
-const newShape = new Symbol("circle", "red", "square", "green", "upper");
-
-
-var availableChar = [SquareOnly, SquareOnly2, SquareOnly3, SquareOnly4, SquareOnly5, CircleOnly, CircleOnly2, CircleOnly3, CircleOnly4, CircleOnly5, newShape];
-//Global Functions
-
-
-
-function SaveProgramming(){
-    sessionStorage.setItem('testingChar', JSON.stringify(testingChar));
-    sessionStorage.setItem('timeElapsedProgramming', timeElapsedProgramming);
-    sessionStorage.setItem('isCorrectProgramming', isCorrectProgramming);
-    sessionStorage.setItem('testCharIndex', testCharIndex)
-}
-
-function SaveTesting(){
-    sessionStorage.setItem('timeElapsedTesting', timeElapsedTesting);
-    sessionStorage.setItem('isCorrectTesting', isCorrectTesting);
-    sessionStorage.setItem('score', score);
-}
-
-function ScoreSymbol(symbol){
-    score = 0;
-    var testingChar = JSON.parse(sessionStorage.getItem('testingChar'));
-
-    if(symbol.shape1 == testingChar.shape1 && symbol.shape1 !== null){
-        score += 1;
-        console.log("Same Shape");
+    else if(symbol.shape2 == "circle"){
+        actx.beginPath();
+        actx.arc(x, y, 20, 0, 2* Math.PI);
+        actx.stroke();
     }
 
-    if(symbol.color1 == testingChar.color1 && symbol.shape1 !== null){
-        score += 1;
-        console.log("Same Shape");
+}
+
+var elem = document.documentElement;
+function openFullscreen() {
+    console.log("Fullscreen");
+    if (elem.requestFullscreen) {
+      elem.requestFullscreen();
+    } else if (elem.webkitRequestFullscreen) { /* Safari */
+      elem.webkitRequestFullscreen();
+    } else if (elem.msRequestFullscreen) { /* IE11 */
+      elem.msRequestFullscreen();
     }
+  }
 
-    if(symbol.shape2 == testingChar.shape2 && symbol.shape1 !== null){
-        score += 1;
-    }    
-    
-    if(symbol.color2 == testingChar.color2 && symbol.shape1 !== null){
-        score += 1;
-    }
+////////////////////////     SYMBOLS (Shape1, Color1, Shape2, Color2, Shape2 Position)
+const Square1 = new Symbol("square", "red", "circle", "black", "lower");
+const Square2 = new Symbol("square", "red", "circle", "black", "upper");
+const Square3 = new Symbol("square", "red", "circle", "black", "right");
+const Square4 = new Symbol("square", "red", "circle", "black", "left");
+const Square5 = new Symbol("square", "red", "circle", "red", "lower");
+const Square6 = new Symbol("square", "red", "circle", "red", "upper");
+const Square7 = new Symbol("square", "red", "circle", "red", "right");
+const Square8 = new Symbol("square", "red", "circle", "red", "left");
+const Square9 = new Symbol("square", "black", "circle", "black", "lower");
+const Square10 = new Symbol("square", "black", "circle", "black", "upper");
+const Square11 = new Symbol("square", "black", "circle", "black", "right");
+const Square12 = new Symbol("square", "black", "circle", "black", "left");
+const Circle1 = new Symbol("circle", "red", "square", "black", "lower");
+const Circle2 = new Symbol("circle", "red", "square", "black", "upper");
+const Circle3 = new Symbol("circle", "red", "square", "black", "right");
+const Circle4 = new Symbol("circle", "red", "square", "black", "left");
+const Circle5 = new Symbol("circle", "red", "square", "red", "lower");
+const Circle6 = new Symbol("circle", "red", "square", "red", "upper");
+const Circle7 = new Symbol("circle", "red", "square", "red", "right");
+const Circle8 = new Symbol("circle", "red", "square", "red", "left");
+const Circle9 = new Symbol("circle", "black", "square", "black", "lower");
+const Circle10 = new Symbol("circle", "black", "square", "black", "upper");
+const Circle11 = new Symbol("circle", "black", "square", "black", "right");
+const Circle12 = new Symbol("circle", "black", "square", "black", "left");
 
-    if(symbol.shape2pos == testingChar.shape2pos && symbol.shape1 !== null){
-        score += 1;
-    }    
-    
-}
 
-function IncorrectProgramming(){
-    isCorrectProgramming = false;
-    endTimeProgramming = new Date();
-    timeElapsedProgramming = endTimeProgramming - startTimeProgramming;
-    SaveProgramming();
-    window.location.href = destination;
-}
-function CorrectProgramming(){
-    isCorrectProgramming = true;
-    endTimeProgramming = new Date();
-    timeElapsedProgramming = endTimeProgramming - startTimeProgramming;
-    SaveProgramming();
-    window.location.href = destination;
-}
-
-function IncorrectTesting(){
-    isCorrectTesting = false;
-    endTimeTesting = new Date();
-    timeElapsedTesting = endTimeTesting - startTimeTesting;
-    ScoreSymbol(symbols[this.id]);
-    sessionStorage.setItem("chosenChar", JSON.stringify(symbols[this.id]));
-    SaveTesting()
-    window.location.href = resultsScreen;
-}
-
-function CorrectTesting(){
-    isCorrectTesting = true;
-    endTimeTesting = new Date();
-    timeElapsedTesting = endTimeTesting - startTimeTesting;
-    ScoreSymbol(symbols[this.id]);
-    sessionStorage.setItem("chosenChar", JSON.stringify(symbols[this.id]));
-    SaveTesting()
-    window.location.href = resultsScreen;
-}
+var availableChars = [Square1, Square2, Square3, Square4, Square5, Square6, Square7, Square8, Square9, Square10, Square11, Square12, Circle1, Circle2, Circle3, Circle4, Circle5, Circle6, Circle7, Circle8, Circle9, Circle10, Circle11, Circle12];
 
 
 //////////////////////////////////// Phases ////////////////////////////////////////////////////
 
-function ProgrammingPhase(){
-    startTimeProgramming = new Date()
+function Start(){
+    //document.addEventListener("click", openFullscreen);
+
+    extraChars = availableChars;
+    for(let i = 0; i < iterations; i++){
+        let randomIndex = Math.floor(Math.random() * availableChars.length);
+        goalChars[i] = availableChars[randomIndex];
+        extraChars.splice(randomIndex, 1);
+    }
+
+    ProgrammingPhase(index);
+}
+
+function ProgrammingPhase(currentIndex){
+    ///////////////////////// ASSIGN IMPORTANT VARIABLES ////////////////////////
+    startTime = new Date();
+    let copyExtraChars = extraChars.slice();
 
     var buttons = document.getElementsByClassName("button");
     const canvases = [
         document.getElementById("canvas1"),
         document.getElementById("canvas2"),
-        document.getElementById("canvas3")
+        document.getElementById("canvas3"),
+        document.getElementById("canvasGoal")
     ];
-    
+
+
+    ///////////////////////// CLEAR PREVIOUS DRAWINGS ////////////////////////
+    for(let i=0; i<canvases.length; i++){
+        let canvas = canvases[i].getContext("2d");
+        canvas.clearRect(0,0, canvases[i].width, canvases[i].height);
+    }
+
+
+    ///////////////////////// DRAW INCORRECT BUTTONS ////////////////////////
 
     for(let i = 0; i < buttons.length; i++){
-        randomChar = Math.floor(Math.random() * availableChar.length)
-        //buttons[i].textContent = availableChar[randomChar].shape1;
-        ctx = canvases[i].getContext("2d");
-        Draw(ctx, availableChar[randomChar], canvases[i].width, canvases[i].height);
-        availableChar.splice(randomChar, 1);
+        let randomIndex = Math.floor(Math.random() * copyExtraChars.length);
+        let ctx = canvases[i].getContext("2d");
+        Draw(ctx, copyExtraChars[randomIndex], canvases[i].width, canvases[i].height);
+        copyExtraChars.splice(randomIndex, 1);
         buttons[i].addEventListener("click", IncorrectProgramming);
     }
 
-    testCharIndex = Math.floor(Math.random() * availableChar.length)
-    var trueButtonIndex = Math.floor(Math.random() * buttons.length)
-    var trueButton = buttons[trueButtonIndex];
-    var trueCanvas = canvases[trueButtonIndex];
+    ///////////////////////// DRAW CORRECT BUTTONS ////////////////////////
+    let trueButtonIndex = Math.floor(Math.random() * buttons.length);
+    let trueButton = buttons[trueButtonIndex];
+    let trueCanvas = canvases[trueButtonIndex];
 
-    testingChar = availableChar[testCharIndex];
-    availableChar.splice(testCharIndex,1);
-    ctx=trueCanvas.getContext("2d");
+    let ctx = trueCanvas.getContext("2d");
     ctx.clearRect(0,0, trueCanvas.width, trueCanvas.height);
-    Draw(ctx, testingChar, trueCanvas.width, trueCanvas.height);
-
-    const goal = document.getElementById("canvasGoal");
-    ctx= goal.getContext("2d");
-    Draw(ctx, testingChar, trueCanvas.width, trueCanvas.height);
-
+    Draw(ctx, goalChars[currentIndex], trueCanvas.width, trueCanvas.height);
+    let ctx2 = canvases[3].getContext("2d");
+    Draw(ctx2, goalChars[currentIndex], canvases[3].width, canvases[3].height);
     trueButton.removeEventListener("click", IncorrectProgramming);
     trueButton.addEventListener("click", CorrectProgramming);
 }
 
 function TestingPhase(){
-    startTimeTesting = new Date();
-    var testingChar = JSON.parse(sessionStorage.getItem('testingChar'));
+    let copyGoalChars = JSON.parse(sessionStorage.getItem('goalChars'));
+    let copyExtraChars = JSON.parse(sessionStorage.getItem('extraChars'));
+    var iterations = sessionStorage.getItem('iterations');
+    var index = 0;
+
     var buttons = document.getElementsByClassName("button");
-
-
     const canvases = [
         document.getElementById("canvas1"),
         document.getElementById("canvas2"),
@@ -242,54 +282,24 @@ function TestingPhase(){
     ];
 
 
-    for(let i =0; i < availableChar.length; i++){
-        
-        if (availableChar[i].shape1 == testingChar.shape1 && availableChar[i].color1 == testingChar.color1 && availableChar[i].shape2 == testingChar.shape2 && availableChar[i].color2 == testingChar.color2 && availableChar[i].shape2pos == testingChar.shape2pos){
-            availableChar.splice(i, 1);
-        }
-    }
-
-
-    for(let i = 0; i < buttons.length; i++){
-        randomChar = Math.floor(Math.random() * availableChar.length)
-        //buttons[i].textContent = availableChar[randomChar].shape1;
+    for(let i = 0; i< buttons.length; i++){
+        let randomIndex = Math.floor(Math.random() * copyExtraChars.length)
         ctx = canvases[i].getContext("2d");
-        Draw(ctx, availableChar[randomChar], canvases[i].width, canvases[i].height);
-        symbols[i] = availableChar[randomChar];
-        availableChar.splice(randomChar, 1);
-        buttons[i].addEventListener("click", IncorrectTesting);
+        Draw(ctx, copyExtraChars[randomIndex], canvases[i].width, canvases[i].height);
+        copyExtraChars.splice(randomIndex, 1);
+        //buttons[i].addEventListener("click", IncorrectTesting);
     }
 
-    console.log(symbols[0]);
 
-    var trueButtonIndex = Math.floor(Math.random() * buttons.length)
-    var trueButton = buttons[trueButtonIndex];
-    var trueCanvas = canvases[trueButtonIndex];
-    symbols[trueButtonIndex] = testingChar;
-    //trueButton.textContent = testingChar;
-    ctx=trueCanvas.getContext("2d");
-    ctx.clearRect(0,0, trueCanvas.width, trueCanvas.height);
-    Draw(ctx, testingChar, trueCanvas.width, trueCanvas.height);
-    trueButton.removeEventListener("click", IncorrectTesting);
-    trueButton.addEventListener("click", CorrectTesting);
-}
-
-function Results(){
-    var testingChar = sessionStorage.getItem('testingChar');
-
-    var timeElapsedProgramming = sessionStorage.getItem('timeElapsedProgramming')/1000;
-    var isCorrectProgramming = sessionStorage.getItem('isCorrectProgramming');
+    let trueButtonIndexes = NonRepeatingValues(copyGoalChars.length);
     
-    var timeElapsedTesting = sessionStorage.getItem('timeElapsedTesting')/1000;
-    var isCorrectTesting = sessionStorage.getItem('isCorrectTesting');
-    var theChosenChar = sessionStorage.getItem('chosenChar');
-    var finalscore = sessionStorage.getItem('score');
-
-
-    //CHANGE DEPENDING ON HOW RESULTS NEED TO BE STORED
-    document.getElementById("ProgrammingResults").textContent = "Time: " + timeElapsedProgramming + "s \n" + "Was Correct: " + isCorrectProgramming;
-    document.getElementById("TestingResults").textContent = "Time: " + timeElapsedTesting + "s \n" + "Was Correct: " + isCorrectTesting;
-    document.getElementById("TestingChar").textContent = testingChar;
-    document.getElementById("ChosenChar").textContent = theChosenChar;
-    document.getElementById("Score").textContent = finalscore;
+    for(let i=0; i<trueButtonIndexes.length; i++){
+        var trueButton = buttons[trueButtonIndexes[i]];
+        var trueCanvas = canvases[trueButtonIndexes[i]];
+        ctx = trueCanvas.getContext("2d");
+        ctx.clearRect(0,0, trueCanvas.width, trueCanvas.height);
+        Draw(ctx, copyGoalChars[i], trueCanvas.width, trueCanvas.height);
+        trueButton.removeEventListener("click", IncorrectTesting);
+        trueButton.addEventListener("click", CorrectTesting);
+    }
 }
