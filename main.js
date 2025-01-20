@@ -205,7 +205,7 @@ var availableChars = [Square1, Square2, Square3, Square4, Square5, Square6, Squa
 //////////////////////////////////// Phases ////////////////////////////////////////////////////
 
 function Start(){
-    //document.addEventListener("click", openFullscreen);
+    document.addEventListener("click", openFullscreen);
 
     extraChars = availableChars;
     for(let i = 0; i < iterations; i++){
