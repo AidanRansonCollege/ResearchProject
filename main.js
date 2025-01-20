@@ -97,9 +97,10 @@ const CircleOnly2 = new Symbol("circle", "red", null, null, null);
 const CircleOnly3 = new Symbol("circle", "blue", null, null, null);
 const CircleOnly4 = new Symbol("circle", "green", null, null, null);
 const CircleOnly5 = new Symbol("circle", "yellow", null, null, null);
+const newShape = new Symbol("circle", "red", "square", "green", "upper");
 
 
-var availableChar = [SquareOnly, SquareOnly2, SquareOnly3, SquareOnly4, SquareOnly5, CircleOnly, CircleOnly2, CircleOnly3, CircleOnly4, CircleOnly5];
+var availableChar = [SquareOnly, SquareOnly2, SquareOnly3, SquareOnly4, SquareOnly5, CircleOnly, CircleOnly2, CircleOnly3, CircleOnly4, CircleOnly5, newShape];
 //Global Functions
 
 
