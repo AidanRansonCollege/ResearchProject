@@ -5,11 +5,12 @@ var extraChars = [];
 var iterations = 3;
 var index = 0;
 var nextScreen = "testing.html";
+var finalScreen = "results.html";
 
 
-//Programming Vars
+//Data Var
+var startTime;
 var programmingTimes = [];
-
 
 
 
@@ -24,6 +25,32 @@ class Symbol {
         this.shape2pos = shape2pos;
     }
 }
+
+//////////////////////// Canvas Function //////////////////////
+
+var container = document.getElementsByClassName('container');
+var canvas = document.getElementsByClassName('canvas');
+
+function ResizeCanvas(){
+    for(let i = 0; i < container.length; i++){
+
+        let width = container[i].offsetWidth;
+        let height = container[i].offsetHeight;
+
+        if(width <= height){
+            canvas[i].width = width;
+            canvas[i].height = width;
+        }
+        else{
+            canvas[i].width = height;
+            canvas[i].height = height;
+        }
+        
+
+    }
+}
+
+
 
 ///////////////////////// Functions ////////////////////////
 
@@ -50,8 +77,8 @@ function SaveProgramming(){
 }
 
 function CorrectProgramming(){
-    console.log(extraChars);
-    console.log("Correct");
+    let endTime = new Date();
+    programmingTimes[index] = endTime - startTime;
     if(index < iterations - 1){
         index += 1;
         console.log("Index " + index);
@@ -71,17 +98,19 @@ function CorrectTesting(){
         index += 1;
     }
     else{
+        window.location.href = finalScreen;
         console.log("Done");
     }
 }
 
 function IncorrectTesting(){
-    console.log("Correct");
+    console.log("Incorrect");
     if(index < iterations -1){
         console.log(index);
         index += 1;
     }
     else{
+        window.location.href = finalScreen;
         console.log("Done");
     }
 }
@@ -102,60 +131,100 @@ function IncorrectProgramming(){
 
 function Draw(ctx, symbol, width, height){
     var actx = ctx;
-    var x = width / 2;
-    var y = height / 2;
     actx.lineWidth = 4;
 
     actx.strokeStyle = symbol.color1;
     
 
-
+    ///// SHAPE 1 //////////
     if(symbol.shape1 == "square"){
         actx.beginPath();
-        actx.moveTo(x-(x/4),y+(y/4));
-        actx.lineTo(x+(x/4), y+(y/4));
-        actx.lineTo(x+(x/4), y+(y/4) - 75);
-        actx.lineTo(x-(x/4), y+(y/4) - 75);
-        actx.lineTo(x-(x/4),y+(y/4))
+        actx.moveTo(width/4, width/4);
+        actx.lineTo(width/4, width - width/4);
+        actx.lineTo(width - width/4, width - width/4);
+        actx.lineTo(width - width/4, width/4);
+        actx.lineTo(width/4, width/4);
         actx.stroke();
     }
     else if(symbol.shape1 == "circle"){
         actx.beginPath();
-        actx.arc(x, y-20, 40, 0, 2 * Math.PI);
+        actx.arc(width/2, width/2, width/4, 0, 2 * Math.PI);
         actx.stroke();
     }
 
     actx.strokeStyle = symbol.color2;
 
+
+    ///// SHAPE 2 ///////
     if(symbol.shape2pos == "left"){
-        x=x-50;
-        y=y-10;
+
+        if(symbol.shape2 == "square"){
+            actx.beginPath();
+            actx.moveTo(width/4, width/2);
+            actx.lineTo(width/4, width * (3/8));
+            actx.lineTo(4, width * (3/8));
+            actx.lineTo(4, width * (5/8));
+            actx.lineTo(width/4, width * (5/8));
+            actx.lineTo(width/4, width/2);
+            actx.stroke();
+        }
+        else if(symbol.shape2 == "circle"){
+            actx.beginPath();
+            actx.arc(width/8 + 2, width/2, width/8 - 2, 0, 2* Math.PI);
+            actx.stroke();
+        }
     }
     else if(symbol.shape2pos == "right"){
-        x=x+65;
-        y=y-10;
+        if(symbol.shape2 == "square"){
+            actx.beginPath();
+            actx.moveTo(width - width/4, width/2);
+            actx.lineTo(width - width/4, width * (3/8));
+            actx.lineTo(width - 4, width * (3/8));
+            actx.lineTo(width - 4, width * (5/8));
+            actx.lineTo(width - width/4, width * (5/8));
+            actx.lineTo(width - width/4, width/2);
+            actx.stroke();
+        }
+        else if(symbol.shape2 == "circle"){
+            actx.beginPath();
+            actx.arc(width - width/8 - 2, width -  width/2, width/8 - 2, 0, 2* Math.PI);
+            actx.stroke();
+        }
     }
     else if(symbol.shape2pos == "upper"){
-        y=y-25;
+        if(symbol.shape2 == "square"){
+            actx.beginPath();
+            actx.moveTo(width/2, width/4);
+            actx.lineTo(width * (3/8), width/4);
+            actx.lineTo(width * (3/8), 4);
+            actx.lineTo(width * (5/8), 4);
+            actx.lineTo(width * (5/8), width/4);
+            actx.lineTo(width/2, width/4);
+            actx.stroke();
+        }
+        else if(symbol.shape2 == "circle"){
+            actx.beginPath();
+            actx.arc(width/2, width/8 + 2, width/8 - 2, 0, 2* Math.PI);
+            actx.stroke();
+        }
     }
     else if(symbol.shape2pos == "lower"){
-        y=y+42;
-    }
-
-
-    if(symbol.shape2 == "square"){
-        actx.beginPath();
-        actx.moveTo(x-(x/8),y+(y/8));
-        actx.lineTo(x+(x/8), y+(y/8));
-        actx.lineTo(x+(x/8), y+(y/8) - 37.5);
-        actx.lineTo(x-(x/8), y+(y/8) - 37.5);
-        actx.lineTo(x-(x/8),y+(y/8))
-        actx.stroke();
-    }
-    else if(symbol.shape2 == "circle"){
-        actx.beginPath();
-        actx.arc(x, y, 20, 0, 2* Math.PI);
-        actx.stroke();
+        if(symbol.shape2 == "square"){
+            actx.beginPath();
+            actx.moveTo(width/2, width - width/4);
+            actx.lineTo(width * (3/8),width -  width/4);
+            actx.lineTo(width * (3/8),width -  4);
+            actx.lineTo(width * (5/8),width -  4);
+            actx.lineTo(width * (5/8),width -  width/4);
+            actx.lineTo(width/2,width -  width/4);
+            actx.stroke();
+            
+        }
+        else if(symbol.shape2 == "circle"){
+            actx.beginPath();
+            actx.arc(width/2,width - width/8 - 2, width/8 - 2, 0, 2* Math.PI);
+            actx.stroke(); 
+        }
     }
 
 }
@@ -207,6 +276,7 @@ var availableChars = [Square1, Square2, Square3, Square4, Square5, Square6, Squa
 function Start(){
     document.addEventListener("click", openFullscreen);
 
+
     extraChars = availableChars;
     for(let i = 0; i < iterations; i++){
         let randomIndex = Math.floor(Math.random() * availableChars.length);
@@ -218,6 +288,7 @@ function Start(){
 }
 
 function ProgrammingPhase(currentIndex){
+    ResizeCanvas();
     ///////////////////////// ASSIGN IMPORTANT VARIABLES ////////////////////////
     startTime = new Date();
     let copyExtraChars = extraChars.slice();
@@ -260,6 +331,8 @@ function ProgrammingPhase(currentIndex){
     Draw(ctx2, goalChars[currentIndex], canvases[3].width, canvases[3].height);
     trueButton.removeEventListener("click", IncorrectProgramming);
     trueButton.addEventListener("click", CorrectProgramming);
+
+    console.log(goalChars);
 }
 
 function TestingPhase(){
@@ -287,7 +360,7 @@ function TestingPhase(){
         ctx = canvases[i].getContext("2d");
         Draw(ctx, copyExtraChars[randomIndex], canvases[i].width, canvases[i].height);
         copyExtraChars.splice(randomIndex, 1);
-        //buttons[i].addEventListener("click", IncorrectTesting);
+        buttons[i].addEventListener("click", IncorrectTesting);
     }
 
 
