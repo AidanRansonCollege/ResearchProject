@@ -32,6 +32,7 @@ var container = document.getElementsByClassName('container');
 var canvas = document.getElementsByClassName('canvas');
 
 function ResizeCanvas(){
+
     for(let i = 0; i < container.length; i++){
 
         let width = container[i].offsetWidth;
@@ -46,8 +47,11 @@ function ResizeCanvas(){
             canvas[i].height = height;
         }
         
-
     }
+
+    canvas[0].width = canvas[1].width;
+    canvas[0].height = canvas[1].height;
+
 }
 
 
@@ -274,9 +278,6 @@ var availableChars = [Square1, Square2, Square3, Square4, Square5, Square6, Squa
 //////////////////////////////////// Phases ////////////////////////////////////////////////////
 
 function Start(){
-    document.addEventListener("click", openFullscreen);
-
-
     extraChars = availableChars;
     for(let i = 0; i < iterations; i++){
         let randomIndex = Math.floor(Math.random() * availableChars.length);
@@ -284,7 +285,21 @@ function Start(){
         extraChars.splice(randomIndex, 1);
     }
 
-    ProgrammingPhase(index);
+    var bool = true;
+
+    while(true){
+        if(confirm("Click to enter Fullscreen (Required)")){
+            openFullscreen();
+            ProgrammingPhase(index);
+            break;
+        }
+        else{
+            continue;
+        }
+        
+        
+    }
+    
 }
 
 function ProgrammingPhase(currentIndex){
@@ -336,6 +351,7 @@ function ProgrammingPhase(currentIndex){
 }
 
 function TestingPhase(){
+    ResizeCanvas();
     let copyGoalChars = JSON.parse(sessionStorage.getItem('goalChars'));
     let copyExtraChars = JSON.parse(sessionStorage.getItem('extraChars'));
     var iterations = sessionStorage.getItem('iterations');

@@ -21,14 +21,35 @@
 .button-wrapper{
     display: flex;
     flex-wrap: wrap;
-    height: 80%;
+    height: 90%;
     width: 100%;
     flex-direction: column;
     justify-content: space-between;
 }
 .button{
-    flex-basis: 30%;
+    flex-basis: 33.333%;
     font-size: 4em;
     background: none;
     border: none;
+}
+
+.row-wrapper{
+    display: flex;
+    height: 30%;
+    width: 100%;
+    flex-direction: row;
+    justify-content: space-between;
+}
+
+.container{
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+    width: 100%;
+}
+
+canvas{
+    margin-right: auto;
+    margin-left: auto;
+    display: block;
 }
