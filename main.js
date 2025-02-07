@@ -6,7 +6,8 @@ var iterations = 3;
 var index = 0;
 var nextScreen = "testing.html";
 var finalScreen = "results.html";
-
+var lineOption = true;
+var audio = new Audio('audiopop.mp3');
 
 //Data Var
 var startTime;
@@ -17,12 +18,13 @@ var programmingTimes = [];
 
 //Classes
 class Symbol {
-    constructor(shape1, color1, shape2, color2, shape2pos){
+    constructor(shape1, color1, shape2, color2, shape2pos, line){
         this.shape1 = shape1;
         this.color1 = color1;
         this.shape2 = shape2;
         this.color2 = color2;
         this.shape2pos = shape2pos;
+        this.line = line;
     }
 }
 
@@ -56,7 +58,38 @@ function ResizeCanvas(){
 
 
 
+
 ///////////////////////// Functions ////////////////////////
+async function delay(ms) {
+    return new Promise(resolve => setTimeout(resolve, ms));
+}
+
+function Check(){
+    console.log(goalChars);
+    console.log(extraChars);
+    console.log(sessionStorage.getItem(iterations));
+    console.log(sessionStorage.getItem(lineOption));
+}
+
+function SaveSettings(){
+    if(document.getElementById("DropIndex").value != ""){
+        iterationValue = document.getElementById("DropIndex").value;
+        sessionStorage.setItem(iterations, iterationValue);
+    }
+
+    if(document.getElementById("CheckLine").checked == true){
+        sessionStorage.setItem(lineOption, true);
+    }
+    else{
+        sessionStorage.setItem(lineOption, false);
+    }
+    DisplaySettings();
+}
+
+function DisplaySettings(){
+    document.getElementById("Iterations").textContent = "Iterations: " + sessionStorage.getItem(iterations);
+    document.getElementById("Lines").textContent = "Lines Enabled: " + sessionStorage.getItem(lineOption);
+}
 
 function NonRepeatingValues(length){
     var values = [];
@@ -77,16 +110,22 @@ function NonRepeatingValues(length){
 function SaveProgramming(){
     sessionStorage.setItem('goalChars', JSON.stringify(goalChars));
     sessionStorage.setItem('extraChars', JSON.stringify(extraChars));
-    sessionStorage.setItem('iterations', iterations);
 }
 
 function CorrectProgramming(){
+    let iterationsLocal = sessionStorage.getItem(iterations);
+    audio.play();
     let endTime = new Date();
     programmingTimes[index] = endTime - startTime;
-    if(index < iterations - 1){
+    if(index < iterationsLocal - 1){
         index += 1;
         console.log("Index " + index);
-        ProgrammingPhase(index);
+        this.style.backgroundColor = "#CCCCCC";
+        setTimeout(() => {
+            this.style.backgroundColor = "#FFFFFF";
+            ProgrammingPhase(index);
+          }, 250); //0.25 s delay
+        
         
     }
     else{
@@ -95,43 +134,71 @@ function CorrectProgramming(){
     }
 }
 
-function CorrectTesting(){
-    console.log("Correct");
-    if(index < iterations -1){
-        console.log(index);
-        index += 1;
-    }
-    else{
-        window.location.href = finalScreen;
-        console.log("Done");
-    }
-}
-
-function IncorrectTesting(){
-    console.log("Incorrect");
-    if(index < iterations -1){
-        console.log(index);
-        index += 1;
-    }
-    else{
-        window.location.href = finalScreen;
-        console.log("Done");
-    }
-}
-
 
 function IncorrectProgramming(){
+    
+    let iterationsLocal = sessionStorage.getItem(iterations);
+    audio.play();
     console.log("Incorrect");
-    if(index < iterations - 1){
+    if(index < iterationsLocal - 1){
         index += 1;
         console.log("Index " + index);
-        ProgrammingPhase(index);
+        this.style.backgroundColor = "#CCCCCC";
+        setTimeout(() => {
+            this.style.backgroundColor = "#FFFFFF";
+            ProgrammingPhase(index);
+          }, 250); //0.25 s delay
     }
     else{
         SaveProgramming()
         window.location.href = nextScreen;
     }
 }
+
+function CorrectTesting(){
+    
+    let iterationsLocal = sessionStorage.getItem(iterations);
+    audio.play();
+    this.style.backgroundColor = "#CCCCCC";
+        setTimeout(() => {
+            this.style.backgroundColor = "#FFFFFF";
+          }, 250); //0.25 s delay
+    console.log("Correct");
+    if(index < iterationsLocal -1){
+        console.log(index);
+        index += 1;
+    }
+    else{
+        document.getElementById("DoneButton").disabled = false;
+        console.log("Done");
+    }
+}
+
+function IncorrectTesting(){
+    
+    let iterationsLocal = sessionStorage.getItem(iterations);
+    audio.play();
+    this.style.backgroundColor = "#CCCCCC";
+        setTimeout(() => {
+            this.style.backgroundColor = "#FFFFFF";
+          }, 250); //0.25 s delay
+    console.log("Incorrect");
+    if(index < iterationsLocal -1){
+        console.log(index);
+        index += 1;
+        
+    }
+    else{
+        document.getElementById("DoneButton").disabled = false;
+        console.log("Done");
+    }
+}
+
+function DoneTesting(){
+    window.location.href = "results.html";
+}
+
+
 
 function Draw(ctx, symbol, width, height){
     var actx = ctx;
@@ -148,11 +215,19 @@ function Draw(ctx, symbol, width, height){
         actx.lineTo(width - width/4, width - width/4);
         actx.lineTo(width - width/4, width/4);
         actx.lineTo(width/4, width/4);
+        if(symbol.line == true){
+            actx.lineTo(width - width/4, width - width/4);
+        }
         actx.stroke();
     }
     else if(symbol.shape1 == "circle"){
         actx.beginPath();
         actx.arc(width/2, width/2, width/4, 0, 2 * Math.PI);
+        if(symbol.line == true){
+            actx.moveTo(width/2 - width/4 * Math.cos(Math.PI/4), width/2 + width/4 * Math.sin(Math.PI/4));
+            actx.lineTo(width/2 + width/4 * Math.cos(Math.PI/4), width/2 - width/4 * Math.sin(Math.PI/4));
+            console.log("LINE DRAWN");
+        }
         actx.stroke();
     }
 
@@ -245,41 +320,96 @@ function openFullscreen() {
     }
   }
 
-////////////////////////     SYMBOLS (Shape1, Color1, Shape2, Color2, Shape2 Position)
-const Square1 = new Symbol("square", "red", "circle", "black", "lower");
-const Square2 = new Symbol("square", "red", "circle", "black", "upper");
-const Square3 = new Symbol("square", "red", "circle", "black", "right");
-const Square4 = new Symbol("square", "red", "circle", "black", "left");
-const Square5 = new Symbol("square", "red", "circle", "red", "lower");
-const Square6 = new Symbol("square", "red", "circle", "red", "upper");
-const Square7 = new Symbol("square", "red", "circle", "red", "right");
-const Square8 = new Symbol("square", "red", "circle", "red", "left");
-const Square9 = new Symbol("square", "black", "circle", "black", "lower");
-const Square10 = new Symbol("square", "black", "circle", "black", "upper");
-const Square11 = new Symbol("square", "black", "circle", "black", "right");
-const Square12 = new Symbol("square", "black", "circle", "black", "left");
-const Circle1 = new Symbol("circle", "red", "square", "black", "lower");
-const Circle2 = new Symbol("circle", "red", "square", "black", "upper");
-const Circle3 = new Symbol("circle", "red", "square", "black", "right");
-const Circle4 = new Symbol("circle", "red", "square", "black", "left");
-const Circle5 = new Symbol("circle", "red", "square", "red", "lower");
-const Circle6 = new Symbol("circle", "red", "square", "red", "upper");
-const Circle7 = new Symbol("circle", "red", "square", "red", "right");
-const Circle8 = new Symbol("circle", "red", "square", "red", "left");
-const Circle9 = new Symbol("circle", "black", "square", "black", "lower");
-const Circle10 = new Symbol("circle", "black", "square", "black", "upper");
-const Circle11 = new Symbol("circle", "black", "square", "black", "right");
-const Circle12 = new Symbol("circle", "black", "square", "black", "left");
+////////////////////////     SYMBOLS (Shape1, Color1, Shape2, Color2, Shape2 Position, Line)
+const Square1 = new Symbol("square", "#D41159", "circle", "#1A85FF", "lower", false);
+const Square2 = new Symbol("square", "#D41159", "circle", "#1A85FF", "upper", false);
+const Square3 = new Symbol("square", "#D41159", "circle", "#1A85FF", "right", false);
+const Square4 = new Symbol("square", "#D41159", "circle", "#1A85FF", "left", false);
+const Square5 = new Symbol("square", "#D41159", "circle", "#D41159", "lower", false);
+const Square6 = new Symbol("square", "#D41159", "circle", "#D41159", "upper", false);
+const Square7 = new Symbol("square", "#D41159", "circle", "#D41159", "right", false);
+const Square8 = new Symbol("square", "#D41159", "circle", "#D41159", "left", false);
+const Square9 = new Symbol("square", "#1A85FF", "circle", "#1A85FF", "lower", false);
+const Square10 = new Symbol("square", "#1A85FF", "circle", "#1A85FF", "upper", false);
+const Square11 = new Symbol("square", "#1A85FF", "circle", "#1A85FF", "right", false);
+const Square12 = new Symbol("square", "#1A85FF", "circle", "#1A85FF", "left", false);
+const Circle1 = new Symbol("circle", "#D41159", "square", "#1A85FF", "lower", false);
+const Circle2 = new Symbol("circle", "#D41159", "square", "#1A85FF", "upper", false);
+const Circle3 = new Symbol("circle", "#D41159", "square", "#1A85FF", "right", false);
+const Circle4 = new Symbol("circle", "#D41159", "square", "#1A85FF", "left", false);
+const Circle5 = new Symbol("circle", "#D41159", "square", "#D41159", "lower", false);
+const Circle6 = new Symbol("circle", "#D41159", "square", "#D41159", "upper", false);
+const Circle7 = new Symbol("circle", "#D41159", "square", "#D41159", "right", false);
+const Circle8 = new Symbol("circle", "#D41159", "square", "#D41159", "left", false);
+const Circle9 = new Symbol("circle", "#1A85FF", "square", "#1A85FF", "lower", false);
+const Circle10 = new Symbol("circle", "#1A85FF", "square", "#1A85FF", "upper", false);
+const Circle11 = new Symbol("circle", "#1A85FF", "square", "#1A85FF", "right", false);
+const Circle12 = new Symbol("circle", "#1A85FF", "square", "#1A85FF", "left", false);
+
+const Square1Line = new Symbol("square", "#D41159", "circle", "#1A85FF", "lower", true);
+const Square2Line = new Symbol("square", "#D41159", "circle", "#1A85FF", "upper", true);
+const Square3Line = new Symbol("square", "#D41159", "circle", "#1A85FF", "right", true);
+const Square4Line = new Symbol("square", "#D41159", "circle", "#1A85FF", "left", true);
+const Square5Line = new Symbol("square", "#D41159", "circle", "#D41159", "lower", true);
+const Square6Line = new Symbol("square", "#D41159", "circle", "#D41159", "upper", true);
+const Square7Line = new Symbol("square", "#D41159", "circle", "#D41159", "right", true);
+const Square8Line = new Symbol("square", "#D41159", "circle", "#D41159", "left", true);
+const Square9Line = new Symbol("square", "#1A85FF", "circle", "#1A85FF", "lower", true);
+const Square10Line = new Symbol("square", "#1A85FF", "circle", "#1A85FF", "upper", true);
+const Square11Line = new Symbol("square", "#1A85FF", "circle", "#1A85FF", "right", true);
+const Square12Line = new Symbol("square", "#1A85FF", "circle", "#1A85FF", "left", true);
+const Circle1Line = new Symbol("circle", "#D41159", "square", "#1A85FF", "lower", true);
+const Circle2Line = new Symbol("circle", "#D41159", "square", "#1A85FF", "upper", true);
+const Circle3Line = new Symbol("circle", "#D41159", "square", "#1A85FF", "right", true);
+const Circle4Line = new Symbol("circle", "#D41159", "square", "#1A85FF", "left", true);
+const Circle5Line = new Symbol("circle", "#D41159", "square", "#D41159", "lower", true);
+const Circle6Line = new Symbol("circle", "#D41159", "square", "#D41159", "upper", true);
+const Circle7Line = new Symbol("circle", "#D41159", "square", "#D41159", "right", true);
+const Circle8Line = new Symbol("circle", "#D41159", "square", "#D41159", "left", true);
+const Circle9Line = new Symbol("circle", "#1A85FF", "square", "#1A85FF", "lower", true);
+const Circle10Line = new Symbol("circle", "#1A85FF", "square", "#1A85FF", "upper", true);
+const Circle11Line = new Symbol("circle", "#1A85FF", "square", "#1A85FF", "right", true);
+const Circle12Line = new Symbol("circle", "#1A85FF", "square", "#1A85FF", "left", true);
 
 
-var availableChars = [Square1, Square2, Square3, Square4, Square5, Square6, Square7, Square8, Square9, Square10, Square11, Square12, Circle1, Circle2, Circle3, Circle4, Circle5, Circle6, Circle7, Circle8, Circle9, Circle10, Circle11, Circle12];
+var noLine = [Square1, Square2, Square3, Square4, Square5, Square6, Square7, Square8, Square9, Square10, Square11, Square12, Circle1, Circle2, Circle3, Circle4, Circle5, Circle6, Circle7, Circle8, Circle9, Circle10, Circle11, Circle12];
+var yesLine = [Square1, Square2, Square3, Square4, Square5, Square6, Square7, Square8, Square9, Square10, Square11, Square12, Circle1, Circle2, Circle3, Circle4, Circle5, Circle6, Circle7, Circle8, Circle9, Circle10, Circle11, Circle12, Square1Line, Square2Line, Square3Line, Square4Line, Square5Line, Square6Line, Square7Line, Square8Line, Square9Line, Square10Line, Square11Line, Square12Line, Circle1Line, Circle2Line, Circle3Line, Circle4Line, Circle5Line, Circle6Line, Circle7Line, Circle8Line, Circle9Line, Circle10Line, Circle11Line, Circle12Line]
 
+var availableChars;
+
+if(lineOption == true){
+    availableChars = yesLine;
+}
+else{
+    availableChars = noLine;
+}
+
+function SettingsButton(){
+    window.location.href = "settings.html";
+}
+
+function StartButton(){
+    window.location.href = "programming.html";
+}
+
+function WelcomeButton(){
+    window.location.href = "Welcome.html";
+}
 
 //////////////////////////////////// Phases ////////////////////////////////////////////////////
 
 function Start(){
+    if(sessionStorage.getItem(iterations) == null){
+        sessionStorage.setItem(iterations, 3);
+    }
+
+    if(sessionStorage.getItem(lineOption) == null){
+        sessionStorage.setItem(lineOption, false);
+    }
+
+    let iterationsLocal = sessionStorage.getItem(iterations);
     extraChars = availableChars;
-    for(let i = 0; i < iterations; i++){
+    for(let i = 0; i < iterationsLocal; i++){
         let randomIndex = Math.floor(Math.random() * availableChars.length);
         goalChars[i] = availableChars[randomIndex];
         extraChars.splice(randomIndex, 1);
@@ -351,6 +481,8 @@ function ProgrammingPhase(currentIndex){
 }
 
 function TestingPhase(){
+    let doneButton = document.getElementById("DoneButton");
+    doneButton.disabled = true;
     ResizeCanvas();
     let copyGoalChars = JSON.parse(sessionStorage.getItem('goalChars'));
     let copyExtraChars = JSON.parse(sessionStorage.getItem('extraChars'));
