@@ -7,20 +7,27 @@
         <h1> Settings </h1>
         <button onclick="WelcomeButton()">Back</button>
         <button onclick="SaveSettings()">Save</button>
-        <h2> Number of Programming Phases</h2>
+        <h2> Number of encoding phase stimuli</h2>
         <select name="Index" id="DropIndex"> 
             <option></option>
             <option value="1">1</option>
             <option value="2">2</option>
             <option value="3">3</option>
         </select>
+
+        <select name="Color" id="DropColor">
+            <option></option>
+            <option value="1">Red Blue</option>
+            <option value="2">Green Yellow</option>
+        </select>
+
         <h2> Lines</h2>
         <input id="CheckLine" type="checkbox" name="lines" value="true">
 
 
         <div id="currentValues">
             <h1> Current Values</h1>
-            <a id="Iterations">Iterations: </a>
+            <a id="Iterations">Number of encoding phase stimuli: </a>
             <br>
             <a id="Lines">Lines Enabled: </a>
         </div>

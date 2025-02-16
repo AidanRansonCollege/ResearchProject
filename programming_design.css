@@ -3,7 +3,8 @@
     height: 100%;
     width: 100%;
     flex-direction: column;
-    justify-content: stretch;
+    justify-content: space-evenly;
+    
 }
 
 .title-wrapper{
@@ -24,6 +25,10 @@
     width: 100%;
     display: flex;
     justify-content: center;
+    border-width: 0px 0px 5px 0px;
+    border-style: solid;
+    border-color: rgba(128, 128, 128, 0.416);
+    padding-bottom: 5%;
 }
 
 .image{
