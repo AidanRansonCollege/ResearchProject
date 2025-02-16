@@ -1,4 +1,3 @@
-//Variables Used
 //Global Var
 var goalChars = [];
 var extraChars = [];
@@ -8,7 +7,7 @@ var nextScreen = "testing.html";
 var finalScreen = "results.html";
 var lineOption = false;
 var audio = new Audio('audiopop.mp3');
-var testValue = 0;
+var colorValue = 0;
 
 //Data Var
 var startTime;
@@ -82,27 +81,38 @@ function NonRepeatingValues(length){
 function SaveSettings(){
     if(document.getElementById("DropIndex").value != ""){
         iterationValue = document.getElementById("DropIndex").value;
-        sessionStorage.setItem(iterations, iterationValue);
+        localStorage.setItem(iterations, iterationValue);
     }
 
     if(document.getElementById("DropColor").value != ""){
-        testValue = document.getElementById("DropColor").value;
+        colorValue = document.getElementById("DropColor").value;
+        localStorage.setItem(colorValue, colorValue);
     }
 
     if(document.getElementById("CheckLine").checked == true){
-        sessionStorage.setItem(lineOption, true);
-        console.log(sessionStorage.getItem(lineOption));
+        localStorage.setItem(lineOption, true);
     }
     else{
-        sessionStorage.setItem(lineOption, false);
+        localStorage.setItem(lineOption, false);
     }
     DisplaySettings();
 }
 
 function DisplaySettings(){
-    document.getElementById("Iterations").textContent = "Iterations: " + sessionStorage.getItem(iterations);
-    document.getElementById("Lines").textContent = "Lines Enabled: " + sessionStorage.getItem(lineOption);
-    document.getElementById("Color").textContent = "Color is: " + testValue;
+    document.getElementById("DropIndex").value = localStorage.getItem(iterations);
+    document.getElementById("DropColor").value = localStorage.getItem(colorValue);
+
+    if(localStorage.getItem(lineOption) == "true"){
+        document.getElementById("CheckLine").checked = true;
+    }
+    else{
+        document.getElementById("CheckLine").checked = false;
+    }
+    
+
+    document.getElementById("Iterations").textContent = "Iterations: " + localStorage.getItem(iterations);
+    document.getElementById("Lines").textContent = "Lines Enabled: " + localStorage.getItem(lineOption);
+    document.getElementById("Color").textContent = "Color is: " + localStorage.getItem(colorValue);
 }
 
 
@@ -113,7 +123,7 @@ function SaveProgramming(){
 }
 
 function CorrectProgramming(){
-    let iterationsLocal = sessionStorage.getItem(iterations);
+    let iterationsLocal = localStorage.getItem(iterations);
     audio.play();
     let endTime = new Date();
     programmingTimes[index] = endTime - startTime;
@@ -137,7 +147,7 @@ function CorrectProgramming(){
 
 function IncorrectProgramming(){
     
-    let iterationsLocal = sessionStorage.getItem(iterations);
+    let iterationsLocal = localStorage.getItem(iterations);
     audio.play();
     console.log("Incorrect");
     if(index < iterationsLocal - 1){
@@ -160,7 +170,7 @@ function IncorrectProgramming(){
 ///////////////////////// Testing Phase Functions ////////////////////////
 function CorrectTesting(){
     
-    let iterationsLocal = sessionStorage.getItem(iterations);
+    let iterationsLocal = localStorage.getItem(iterations);
     audio.play();
     this.style.backgroundColor = "#CCCCCC";
         setTimeout(() => {
@@ -179,7 +189,7 @@ function CorrectTesting(){
 
 function IncorrectTesting(){
     
-    let iterationsLocal = sessionStorage.getItem(iterations);
+    let iterationsLocal = localStorage.getItem(iterations);
     audio.play();
     this.style.backgroundColor = "#CCCCCC";
         setTimeout(() => {
@@ -393,16 +403,16 @@ function DoneTesting(){
 //////////////////////////////////// Phases ////////////////////////////////////////////////////
 
 function Start(){
-    if(sessionStorage.getItem(iterations) == null){
+    if(localStorage.getItem(iterations) == null){
         sessionStorage.setItem(iterations, 3);
     }
 
-    if(sessionStorage.getItem(lineOption) == null){
+    if(localStorage.getItem(lineOption) == null){
         sessionStorage.setItem(lineOption, false);
     }
 
-    let lineOptionLocal = sessionStorage.getItem(lineOption);
-    let iterationsLocal = sessionStorage.getItem(iterations);
+    let lineOptionLocal = localStorage.getItem(lineOption);
+    let iterationsLocal = localStorage.getItem(iterations);
     
     if(lineOptionLocal == "true"){
         console.log("HAS LINES");
