@@ -6,14 +6,13 @@ var iterations = 3;
 var index = 0;
 var nextScreen = "testing.html";
 var finalScreen = "results.html";
-var lineOption = true;
+var lineOption = false;
 var audio = new Audio('audiopop.mp3');
+var testValue = 0;
 
 //Data Var
 var startTime;
 var programmingTimes = [];
-
-
 
 
 //Class
@@ -27,6 +26,8 @@ class Symbol {
         this.line = line;
     }
 }
+
+
 
 //////////////////////// Canvas Function //////////////////////
 
@@ -57,39 +58,11 @@ function ResizeCanvas(){
 }
 
 
-
-
-///////////////////////// Functions ////////////////////////
+///////////////////////// Miscellaneous Functions ////////////////////////
 async function delay(ms) {
     return new Promise(resolve => setTimeout(resolve, ms));
 }
 
-function Check(){
-    console.log(goalChars);
-    console.log(extraChars);
-    console.log(sessionStorage.getItem(iterations));
-    console.log(sessionStorage.getItem(lineOption));
-}
-
-function SaveSettings(){
-    if(document.getElementById("DropIndex").value != ""){
-        iterationValue = document.getElementById("DropIndex").value;
-        sessionStorage.setItem(iterations, iterationValue);
-    }
-
-    if(document.getElementById("CheckLine").checked == true){
-        sessionStorage.setItem(lineOption, true);
-    }
-    else{
-        sessionStorage.setItem(lineOption, false);
-    }
-    DisplaySettings();
-}
-
-function DisplaySettings(){
-    document.getElementById("Iterations").textContent = "Iterations: " + sessionStorage.getItem(iterations);
-    document.getElementById("Lines").textContent = "Lines Enabled: " + sessionStorage.getItem(lineOption);
-}
 
 function NonRepeatingValues(length){
     var values = [];
@@ -102,11 +75,38 @@ function NonRepeatingValues(length){
         possibleValues.splice(randomIndex, 1);
     }
 
-    console.log(values);
-
     return values;
 }
 
+///////////////////////// Settings Functions ////////////////////////
+function SaveSettings(){
+    if(document.getElementById("DropIndex").value != ""){
+        iterationValue = document.getElementById("DropIndex").value;
+        sessionStorage.setItem(iterations, iterationValue);
+    }
+
+    if(document.getElementById("DropColor").value != ""){
+        testValue = document.getElementById("DropColor").value;
+    }
+
+    if(document.getElementById("CheckLine").checked == true){
+        sessionStorage.setItem(lineOption, true);
+        console.log(sessionStorage.getItem(lineOption));
+    }
+    else{
+        sessionStorage.setItem(lineOption, false);
+    }
+    DisplaySettings();
+}
+
+function DisplaySettings(){
+    document.getElementById("Iterations").textContent = "Iterations: " + sessionStorage.getItem(iterations);
+    document.getElementById("Lines").textContent = "Lines Enabled: " + sessionStorage.getItem(lineOption);
+    document.getElementById("Color").textContent = "Color is: " + testValue;
+}
+
+
+///////////////////////// Programming Phase Functions ////////////////////////
 function SaveProgramming(){
     sessionStorage.setItem('goalChars', JSON.stringify(goalChars));
     sessionStorage.setItem('extraChars', JSON.stringify(extraChars));
@@ -155,6 +155,9 @@ function IncorrectProgramming(){
     }
 }
 
+
+
+///////////////////////// Testing Phase Functions ////////////////////////
 function CorrectTesting(){
     
     let iterationsLocal = sessionStorage.getItem(iterations);
@@ -194,12 +197,10 @@ function IncorrectTesting(){
     }
 }
 
-function DoneTesting(){
-    window.location.href = "results.html";
-}
 
 
 
+///////////////////////// Shape Functions ////////////////////////
 function Draw(ctx, symbol, width, height){
     var actx = ctx;
     actx.lineWidth = 4;
@@ -308,17 +309,6 @@ function Draw(ctx, symbol, width, height){
 
 }
 
-var elem = document.documentElement;
-function openFullscreen() {
-    console.log("Fullscreen");
-    if (elem.requestFullscreen) {
-      elem.requestFullscreen();
-    } else if (elem.webkitRequestFullscreen) { /* Safari */
-      elem.webkitRequestFullscreen();
-    } else if (elem.msRequestFullscreen) { /* IE11 */
-      elem.msRequestFullscreen();
-    }
-  }
 
 ////////////////////////     SYMBOLS (Shape1, Color1, Shape2, Color2, Shape2 Position, Line)
 const Square1 = new Symbol("square", "#D41159", "circle", "#1A85FF", "lower", false);
@@ -377,13 +367,8 @@ var yesLine = [Square1, Square2, Square3, Square4, Square5, Square6, Square7, Sq
 
 var availableChars;
 
-if(lineOption == true){
-    availableChars = yesLine;
-}
-else{
-    availableChars = noLine;
-}
 
+///////////////////////// Button Functions ////////////////////////
 function SettingsButton(){
     window.location.href = "settings.html";
 }
@@ -396,6 +381,15 @@ function WelcomeButton(){
     window.location.href = "Welcome.html";
 }
 
+
+function DoneTesting(){
+    window.location.href = "results.html";
+}
+
+
+
+
+
 //////////////////////////////////// Phases ////////////////////////////////////////////////////
 
 function Start(){
@@ -407,7 +401,18 @@ function Start(){
         sessionStorage.setItem(lineOption, false);
     }
 
+    let lineOptionLocal = sessionStorage.getItem(lineOption);
     let iterationsLocal = sessionStorage.getItem(iterations);
+    
+    if(lineOptionLocal == "true"){
+        console.log("HAS LINES");
+        availableChars = yesLine;
+    }
+    else{
+        console.log("NO LINES");
+        availableChars = noLine;
+    }
+
     extraChars = availableChars;
     for(let i = 0; i < iterationsLocal; i++){
         let randomIndex = Math.floor(Math.random() * availableChars.length);
@@ -415,28 +420,15 @@ function Start(){
         extraChars.splice(randomIndex, 1);
     }
 
-    var bool = true;
-
-    while(true){
-        if(confirm("Click to enter Fullscreen (Required)")){
-            openFullscreen();
-            ProgrammingPhase(index);
-            break;
-        }
-        else{
-            continue;
-        }
-        
-        
-    }
-    
+    sessionStorage.setItem(extraChars, JSON.stringify(extraChars));
+    ProgrammingPhase(index);
 }
 
 function ProgrammingPhase(currentIndex){
     ResizeCanvas();
     ///////////////////////// ASSIGN IMPORTANT VARIABLES ////////////////////////
     startTime = new Date();
-    let copyExtraChars = extraChars.slice();
+    let copyExtraChars = JSON.parse(sessionStorage.getItem(extraChars)).slice();
 
     var buttons = document.getElementsByClassName("button");
     const canvases = [
@@ -480,14 +472,15 @@ function ProgrammingPhase(currentIndex){
     console.log(goalChars);
 }
 
+
+
 function TestingPhase(){
     let doneButton = document.getElementById("DoneButton");
     doneButton.disabled = true;
     ResizeCanvas();
     let copyGoalChars = JSON.parse(sessionStorage.getItem('goalChars'));
     let copyExtraChars = JSON.parse(sessionStorage.getItem('extraChars'));
-    var iterations = sessionStorage.getItem('iterations');
-    var index = 0;
+
 
     var buttons = document.getElementsByClassName("button");
     const canvases = [
