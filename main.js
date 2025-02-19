@@ -8,6 +8,7 @@ var finalScreen = "results.html";
 var lineOption = false;
 var audio = new Audio('audiopop.mp3');
 var colorValue = 0;
+var tempIndexes;
 
 //Data Var
 var startTime;
@@ -126,7 +127,20 @@ function CorrectProgramming(){
     let iterationsLocal = localStorage.getItem(iterations);
     audio.play();
     let endTime = new Date();
-    programmingTimes[index] = endTime - startTime;
+
+    
+    //SAVE CLICKS AND TIMES
+    let symbolArray = JSON.parse(sessionStorage.getItem("clickedSymbols"));
+    symbolArray.push(tempIndexes[this.id]);
+    sessionStorage.setItem("clickedSymbols", JSON.stringify(symbolArray));
+    console.log(JSON.parse(sessionStorage.getItem("clickedSymbols")));
+
+    let timeArray = JSON.parse(sessionStorage.getItem("clickTimes"));
+    timeArray.push((endTime - startTime)/1000);
+    sessionStorage.setItem("clickTimes", JSON.stringify(timeArray));
+    console.log("times" + JSON.parse(sessionStorage.getItem("clickTimes")));
+
+
     if(index < iterationsLocal - 1){
         index += 1;
         console.log("Index " + index);
@@ -146,14 +160,29 @@ function CorrectProgramming(){
 
 
 function IncorrectProgramming(){
+
+    endTime = new Date();
     
     let iterationsLocal = localStorage.getItem(iterations);
     audio.play();
     console.log("Incorrect");
+
+    //SAVE CLICKS AND TIMES
+    let symbolArray = JSON.parse(sessionStorage.getItem("clickedSymbols"));
+    symbolArray.push(tempIndexes[this.id]);
+    sessionStorage.setItem("clickedSymbols", JSON.stringify(symbolArray));
+    console.log(JSON.parse(sessionStorage.getItem("clickedSymbols")));
+
+    let timeArray = JSON.parse(sessionStorage.getItem("clickTimes"));
+    timeArray.push((endTime - startTime)/1000);
+    sessionStorage.setItem("clickTimes", JSON.stringify(timeArray));
+    console.log("times" + JSON.parse(sessionStorage.getItem("clickTimes")));
+
     if(index < iterationsLocal - 1){
         index += 1;
         console.log("Index " + index);
         this.style.backgroundColor = "#CCCCCC";
+
         setTimeout(() => {
             this.style.backgroundColor = "#FFFFFF";
             ProgrammingPhase(index);
@@ -169,10 +198,23 @@ function IncorrectProgramming(){
 
 ///////////////////////// Testing Phase Functions ////////////////////////
 function CorrectTesting(){
-    
+    endTime = new Date();
+
     let iterationsLocal = localStorage.getItem(iterations);
     audio.play();
     this.style.backgroundColor = "#CCCCCC";
+
+    //SAVE CLICKS AND TIMES
+    let symbolArray = JSON.parse(sessionStorage.getItem("clickedSymbols"));
+    symbolArray.push(tempIndexes[this.id]);
+    sessionStorage.setItem("clickedSymbols", JSON.stringify(symbolArray));
+    console.log(JSON.parse(sessionStorage.getItem("clickedSymbols")));
+
+    let timeArray = JSON.parse(sessionStorage.getItem("clickTimes"));
+    timeArray.push((endTime - startTime)/1000);
+    sessionStorage.setItem("clickTimes", JSON.stringify(timeArray));
+    console.log("times" + JSON.parse(sessionStorage.getItem("clickTimes")));
+
         setTimeout(() => {
             this.style.backgroundColor = "#FFFFFF";
           }, 250); //0.25 s delay
@@ -188,10 +230,25 @@ function CorrectTesting(){
 }
 
 function IncorrectTesting(){
+    endTime = new Date();
     
     let iterationsLocal = localStorage.getItem(iterations);
     audio.play();
     this.style.backgroundColor = "#CCCCCC";
+
+     //SAVE CLICKS AND TIMES
+     let symbolArray = JSON.parse(sessionStorage.getItem("clickedSymbols"));
+     symbolArray.push(tempIndexes[this.id]);
+     sessionStorage.setItem("clickedSymbols", JSON.stringify(symbolArray));
+     console.log(JSON.parse(sessionStorage.getItem("clickedSymbols")));
+ 
+     let timeArray = JSON.parse(sessionStorage.getItem("clickTimes"));
+     timeArray.push((endTime - startTime)/1000);
+     sessionStorage.setItem("clickTimes", JSON.stringify(timeArray));
+     console.log("times" + JSON.parse(sessionStorage.getItem("clickTimes")));
+
+
+
         setTimeout(() => {
             this.style.backgroundColor = "#FFFFFF";
           }, 250); //0.25 s delay
@@ -403,6 +460,10 @@ function DoneTesting(){
 //////////////////////////////////// Phases ////////////////////////////////////////////////////
 
 function Start(){
+    let temparray = [];
+    sessionStorage.setItem("clickedSymbols", JSON.stringify(temparray));
+    sessionStorage.setItem("clickTimes", JSON.stringify(temparray));
+
     if(localStorage.getItem(iterations) == null){
         sessionStorage.setItem(iterations, 3);
     }
@@ -458,10 +519,13 @@ function ProgrammingPhase(currentIndex){
 
     ///////////////////////// DRAW INCORRECT BUTTONS ////////////////////////
 
+    tempIndexes = [];
+
     for(let i = 0; i < buttons.length; i++){
         let randomIndex = Math.floor(Math.random() * copyExtraChars.length);
         let ctx = canvases[i].getContext("2d");
         Draw(ctx, copyExtraChars[randomIndex], canvases[i].width, canvases[i].height);
+        tempIndexes[i] = copyExtraChars[randomIndex];
         copyExtraChars.splice(randomIndex, 1);
         buttons[i].addEventListener("click", IncorrectProgramming);
     }
@@ -470,7 +534,7 @@ function ProgrammingPhase(currentIndex){
     let trueButtonIndex = Math.floor(Math.random() * buttons.length);
     let trueButton = buttons[trueButtonIndex];
     let trueCanvas = canvases[trueButtonIndex];
-
+    tempIndexes[trueButtonIndex] = goalChars[currentIndex];
     let ctx = trueCanvas.getContext("2d");
     ctx.clearRect(0,0, trueCanvas.width, trueCanvas.height);
     Draw(ctx, goalChars[currentIndex], trueCanvas.width, trueCanvas.height);
@@ -485,11 +549,14 @@ function ProgrammingPhase(currentIndex){
 
 
 function TestingPhase(){
+
+    startTime = new Date();
+
     let doneButton = document.getElementById("DoneButton");
     doneButton.disabled = true;
     ResizeCanvas();
     let copyGoalChars = JSON.parse(sessionStorage.getItem('goalChars'));
-    let copyExtraChars = JSON.parse(sessionStorage.getItem('extraChars'));
+    let copyExtraChars = JSON.parse(sessionStorage.getItem('extraChars')).slice();
 
 
     var buttons = document.getElementsByClassName("button");
@@ -505,11 +572,13 @@ function TestingPhase(){
         document.getElementById("canvas9")
     ];
 
+    tempIndexes = [];
 
     for(let i = 0; i< buttons.length; i++){
         let randomIndex = Math.floor(Math.random() * copyExtraChars.length)
         ctx = canvases[i].getContext("2d");
         Draw(ctx, copyExtraChars[randomIndex], canvases[i].width, canvases[i].height);
+        tempIndexes[i] = copyExtraChars[randomIndex];
         copyExtraChars.splice(randomIndex, 1);
         buttons[i].addEventListener("click", IncorrectTesting);
     }
@@ -522,8 +591,22 @@ function TestingPhase(){
         var trueCanvas = canvases[trueButtonIndexes[i]];
         ctx = trueCanvas.getContext("2d");
         ctx.clearRect(0,0, trueCanvas.width, trueCanvas.height);
+        tempIndexes[trueButtonIndexes[i]] = copyGoalChars[i];
         Draw(ctx, copyGoalChars[i], trueCanvas.width, trueCanvas.height);
         trueButton.removeEventListener("click", IncorrectTesting);
         trueButton.addEventListener("click", CorrectTesting);
     }
+}
+
+function Results(){
+    let symbolArray = JSON.parse(sessionStorage.getItem("clickedSymbols"));
+    let timeArray = JSON.parse(sessionStorage.getItem("clickTimes"));
+    let copyGoalChars = JSON.parse(sessionStorage.getItem('goalChars'));
+
+    document.getElementById("GoalChar").textContent = "GOAL \n" + JSON.stringify(copyGoalChars);
+
+    document.getElementById("ProgrammingResults").textContext = "Clicked Symbols \n" + JSON.stringify(symbolArray[0])
+
+
+
 }

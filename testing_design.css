@@ -26,6 +26,7 @@
     flex-direction: column;
     justify-content: space-between;
 }
+
 .button{
     flex-basis: 33.333%;
     font-size: 4em;
@@ -52,4 +53,16 @@ canvas{
     margin-right: auto;
     margin-left: auto;
     display: block;
+}
+
+.donebutton:disabled{
+    color: rgb(0, 0, 0, 0);
+    background-color: rgb(0, 0, 0, 0);
+    border-color: rgb(0, 0, 0, 0);
+}
+
+.donebutton:enabled{
+    color: rgba(109, 105, 105, 100);
+    background-color: rgba(183, 179, 179, 100);
+    border-color: rgba(61, 61, 61, 100);
 }
