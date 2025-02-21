@@ -10,6 +10,9 @@ var audio = new Audio('audiopop.mp3');
 var colorValue = 0;
 var tempIndexes;
 
+var color1;
+var color2;
+
 //Data Var
 var startTime;
 var programmingTimes = [];
@@ -37,10 +40,8 @@ var canvas = document.getElementsByClassName('canvas');
 function ResizeCanvas(){
 
     for(let i = 0; i < container.length; i++){
-
         let width = container[i].offsetWidth;
         let height = container[i].offsetHeight;
-
         if(width <= height){
             canvas[i].width = width;
             canvas[i].height = width;
@@ -49,12 +50,10 @@ function ResizeCanvas(){
             canvas[i].width = height;
             canvas[i].height = height;
         }
-        
     }
 
     canvas[0].width = canvas[1].width;
     canvas[0].height = canvas[1].height;
-
 }
 
 
@@ -62,7 +61,6 @@ function ResizeCanvas(){
 async function delay(ms) {
     return new Promise(resolve => setTimeout(resolve, ms));
 }
-
 
 function NonRepeatingValues(length){
     var values = [];
@@ -87,7 +85,8 @@ function SaveSettings(){
 
     if(document.getElementById("DropColor").value != ""){
         colorValue = document.getElementById("DropColor").value;
-        localStorage.setItem(colorValue, colorValue);
+        console.log(colorValue);
+        localStorage.setItem("colorValue", colorValue);
     }
 
     if(document.getElementById("CheckLine").checked == true){
@@ -101,7 +100,8 @@ function SaveSettings(){
 
 function DisplaySettings(){
     document.getElementById("DropIndex").value = localStorage.getItem(iterations);
-    document.getElementById("DropColor").value = localStorage.getItem(colorValue);
+    document.getElementById("DropColor").value = localStorage.getItem("colorValue");
+    
 
     if(localStorage.getItem(lineOption) == "true"){
         document.getElementById("CheckLine").checked = true;
@@ -113,7 +113,7 @@ function DisplaySettings(){
 
     document.getElementById("Iterations").textContent = "Iterations: " + localStorage.getItem(iterations);
     document.getElementById("Lines").textContent = "Lines Enabled: " + localStorage.getItem(lineOption);
-    document.getElementById("Color").textContent = "Color is: " + localStorage.getItem(colorValue);
+    document.getElementById("Color").textContent = "Color is: " + localStorage.getItem("colorValue");
 }
 
 
@@ -377,56 +377,101 @@ function Draw(ctx, symbol, width, height){
 }
 
 
-////////////////////////     SYMBOLS (Shape1, Color1, Shape2, Color2, Shape2 Position, Line)
-const Square1 = new Symbol("square", "#D41159", "circle", "#1A85FF", "lower", false);
-const Square2 = new Symbol("square", "#D41159", "circle", "#1A85FF", "upper", false);
-const Square3 = new Symbol("square", "#D41159", "circle", "#1A85FF", "right", false);
-const Square4 = new Symbol("square", "#D41159", "circle", "#1A85FF", "left", false);
-const Square5 = new Symbol("square", "#D41159", "circle", "#D41159", "lower", false);
-const Square6 = new Symbol("square", "#D41159", "circle", "#D41159", "upper", false);
-const Square7 = new Symbol("square", "#D41159", "circle", "#D41159", "right", false);
-const Square8 = new Symbol("square", "#D41159", "circle", "#D41159", "left", false);
-const Square9 = new Symbol("square", "#1A85FF", "circle", "#1A85FF", "lower", false);
-const Square10 = new Symbol("square", "#1A85FF", "circle", "#1A85FF", "upper", false);
-const Square11 = new Symbol("square", "#1A85FF", "circle", "#1A85FF", "right", false);
-const Square12 = new Symbol("square", "#1A85FF", "circle", "#1A85FF", "left", false);
-const Circle1 = new Symbol("circle", "#D41159", "square", "#1A85FF", "lower", false);
-const Circle2 = new Symbol("circle", "#D41159", "square", "#1A85FF", "upper", false);
-const Circle3 = new Symbol("circle", "#D41159", "square", "#1A85FF", "right", false);
-const Circle4 = new Symbol("circle", "#D41159", "square", "#1A85FF", "left", false);
-const Circle5 = new Symbol("circle", "#D41159", "square", "#D41159", "lower", false);
-const Circle6 = new Symbol("circle", "#D41159", "square", "#D41159", "upper", false);
-const Circle7 = new Symbol("circle", "#D41159", "square", "#D41159", "right", false);
-const Circle8 = new Symbol("circle", "#D41159", "square", "#D41159", "left", false);
-const Circle9 = new Symbol("circle", "#1A85FF", "square", "#1A85FF", "lower", false);
-const Circle10 = new Symbol("circle", "#1A85FF", "square", "#1A85FF", "upper", false);
-const Circle11 = new Symbol("circle", "#1A85FF", "square", "#1A85FF", "right", false);
-const Circle12 = new Symbol("circle", "#1A85FF", "square", "#1A85FF", "left", false);
 
-const Square1Line = new Symbol("square", "#D41159", "circle", "#1A85FF", "lower", true);
-const Square2Line = new Symbol("square", "#D41159", "circle", "#1A85FF", "upper", true);
-const Square3Line = new Symbol("square", "#D41159", "circle", "#1A85FF", "right", true);
-const Square4Line = new Symbol("square", "#D41159", "circle", "#1A85FF", "left", true);
-const Square5Line = new Symbol("square", "#D41159", "circle", "#D41159", "lower", true);
-const Square6Line = new Symbol("square", "#D41159", "circle", "#D41159", "upper", true);
-const Square7Line = new Symbol("square", "#D41159", "circle", "#D41159", "right", true);
-const Square8Line = new Symbol("square", "#D41159", "circle", "#D41159", "left", true);
-const Square9Line = new Symbol("square", "#1A85FF", "circle", "#1A85FF", "lower", true);
-const Square10Line = new Symbol("square", "#1A85FF", "circle", "#1A85FF", "upper", true);
-const Square11Line = new Symbol("square", "#1A85FF", "circle", "#1A85FF", "right", true);
-const Square12Line = new Symbol("square", "#1A85FF", "circle", "#1A85FF", "left", true);
-const Circle1Line = new Symbol("circle", "#D41159", "square", "#1A85FF", "lower", true);
-const Circle2Line = new Symbol("circle", "#D41159", "square", "#1A85FF", "upper", true);
-const Circle3Line = new Symbol("circle", "#D41159", "square", "#1A85FF", "right", true);
-const Circle4Line = new Symbol("circle", "#D41159", "square", "#1A85FF", "left", true);
-const Circle5Line = new Symbol("circle", "#D41159", "square", "#D41159", "lower", true);
-const Circle6Line = new Symbol("circle", "#D41159", "square", "#D41159", "upper", true);
-const Circle7Line = new Symbol("circle", "#D41159", "square", "#D41159", "right", true);
-const Circle8Line = new Symbol("circle", "#D41159", "square", "#D41159", "left", true);
-const Circle9Line = new Symbol("circle", "#1A85FF", "square", "#1A85FF", "lower", true);
-const Circle10Line = new Symbol("circle", "#1A85FF", "square", "#1A85FF", "upper", true);
-const Circle11Line = new Symbol("circle", "#1A85FF", "square", "#1A85FF", "right", true);
-const Circle12Line = new Symbol("circle", "#1A85FF", "square", "#1A85FF", "left", true);
+
+////////////////////////     SYMBOLS (Shape1, Color1, Shape2, Color2, Shape2 Position, Line)
+let colorValueLocal = localStorage.getItem("colorValue");
+if(colorValueLocal == null){
+    color1 = "#000000";
+    color2 = "#000000";
+}
+else if(colorValueLocal == 1){
+    color1 = "#005AB5";
+    color2 = "#DC3220";
+}
+else if(colorValueLocal == 2){
+    color1 = "#FFC20A";
+    color2 = "#0C7BDC";
+}
+else if(colorValueLocal == 3){
+    color1 = "#E66100";
+    color2 = "#5D3A9B";
+}
+
+const Square1 = new Symbol("square", color1, "circle", color2, "lower", false);
+const Square2 = new Symbol("square", color1, "circle", color2, "upper", false);
+const Square3 = new Symbol("square", color1, "circle", color2, "right", false);
+const Square4 = new Symbol("square", color1, "circle", color2, "left", false);
+const Square5 = new Symbol("square", color1, "circle", color1, "lower", false);
+const Square6 = new Symbol("square", color1, "circle", color1, "upper", false);
+const Square7 = new Symbol("square", color1, "circle", color1, "right", false);
+const Square8 = new Symbol("square", color1, "circle", color1, "left", false);
+const Square9 = new Symbol("square", color2, "circle", color2, "lower", false);
+const Square10 = new Symbol("square", color2, "circle", color2, "upper", false);
+const Square11 = new Symbol("square", color2, "circle", color2, "right", false);
+const Square12 = new Symbol("square", color2, "circle", color2, "left", false);
+const Circle1 = new Symbol("circle", color1, "square", color2, "lower", false);
+const Circle2 = new Symbol("circle", color1, "square", color2, "upper", false);
+const Circle3 = new Symbol("circle", color1, "square", color2, "right", false);
+const Circle4 = new Symbol("circle", color1, "square", color2, "left", false);
+const Circle5 = new Symbol("circle", color1, "square", color1, "lower", false);
+const Circle6 = new Symbol("circle", color1, "square", color1, "upper", false);
+const Circle7 = new Symbol("circle", color1, "square", color1, "right", false);
+const Circle8 = new Symbol("circle", color1, "square", color1, "left", false);
+const Circle9 = new Symbol("circle", color2, "square", color2, "lower", false);
+const Circle10 = new Symbol("circle", color2, "square", color2, "upper", false);
+const Circle11 = new Symbol("circle", color2, "square", color2, "right", false);
+const Circle12 = new Symbol("circle", color2, "square", color2, "left", false);
+
+const Square1Line = new Symbol("square", color1, "circle", color2, "lower", true);
+const Square2Line = new Symbol("square", color1, "circle", color2, "upper", true);
+const Square3Line = new Symbol("square", color1, "circle", color2, "right", true);
+const Square4Line = new Symbol("square", color1, "circle", color2, "left", true);
+const Square5Line = new Symbol("square", color1, "circle", color1, "lower", true);
+const Square6Line = new Symbol("square", color1, "circle", color1, "upper", true);
+const Square7Line = new Symbol("square", color1, "circle", color1, "right", true);
+const Square8Line = new Symbol("square", color1, "circle", color1, "left", true);
+const Square9Line = new Symbol("square", color2, "circle", color2, "lower", true);
+const Square10Line = new Symbol("square", color2, "circle", color2, "upper", true);
+const Square11Line = new Symbol("square", color2, "circle", color2, "right", true);
+const Square12Line = new Symbol("square", color2, "circle", color2, "left", true);
+const Circle1Line = new Symbol("circle", color1, "square", color2, "lower", true);
+const Circle2Line = new Symbol("circle", color1, "square", color2, "upper", true);
+const Circle3Line = new Symbol("circle", color1, "square", color2, "right", true);
+const Circle4Line = new Symbol("circle", color1, "square", color2, "left", true);
+const Circle5Line = new Symbol("circle", color1, "square", color1, "lower", true);
+const Circle6Line = new Symbol("circle", color1, "square", color1, "upper", true);
+const Circle7Line = new Symbol("circle", color1, "square", color1, "right", true);
+const Circle8Line = new Symbol("circle", color1, "square", color1, "left", true);
+const Circle9Line = new Symbol("circle", color2, "square", color2, "lower", true);
+const Circle10Line = new Symbol("circle", color2, "square", color2, "upper", true);
+const Circle11Line = new Symbol("circle", color2, "square", color2, "right", true);
+const Circle12Line = new Symbol("circle", color2, "square", color2, "left", true);
+
+const LinearB1 = new Symbol("𐀀", color1, null, color2, null, null);
+const LinearB2 = new Symbol("𐀁", color1, null, color2, null, null);
+const LinearB3 = new Symbol(" 𐀂", color1, null, color2, null, null);
+const LinearB4 = new Symbol("𐀃", color1, null, color2, null, null);
+const LinearB5 = new Symbol("𐀄", color1, null, color2, null, null);
+const LinearB6 = new Symbol("𐀅", color1, null, color2, null, null);
+const LinearB7 = new Symbol("𐀆", color1, null, color2, null, null);
+const LinearB8 = new Symbol("𐀇", color1, null, color2, null, null);
+const LinearB9 = new Symbol("𐀈", color1, null, color2, null, null);
+const LinearB10 = new Symbol("𐀉", color1, null, color2, null, null);
+const LinearB11 = new Symbol("𐀊", color1, null, color2, null, null);
+const LinearB12 = new Symbol("𐀳", color1, null, color2, null, null);
+const LinearB13 = new Symbol("𐀴", color1, null, color2, null, null);
+const LinearB14 = new Symbol("𐀶", color1, null, color2, null, null);
+const LinearB15 = new Symbol("𐀸", color1, null, color2, null, null);
+const LinearB16 = new Symbol("𐀍", color1, null, color2, null, null);
+const LinearB17 = new Symbol("𐀓", color1, null, color2, null, null);
+const LinearB18 = new Symbol("𐀩", color1, null, color2, null, null);
+const LinearB19 = new Symbol("𐁔", color1, null, color2, null, null);
+const LinearB20 = new Symbol("𐀢", color1, null, color2, null, null);
+const LinearB21 = new Symbol("𐀀", color1, null, color2, null, null);
+const LinearB22 = new Symbol("𐀹", color1, null, color2, null, null);
+const LinearB23 = new Symbol("𐀞", color1, null, color2, null, null);
+const LinearB24 = new Symbol("𐀿", color1, null, color2, null, null);
 
 
 var noLine = [Square1, Square2, Square3, Square4, Square5, Square6, Square7, Square8, Square9, Square10, Square11, Square12, Circle1, Circle2, Circle3, Circle4, Circle5, Circle6, Circle7, Circle8, Circle9, Circle10, Circle11, Circle12];
