@@ -598,12 +598,32 @@ function TestingPhase(){
     }
 }
 
+function resultsScore(obj1, obj2){
+    let score = 0;
+    console.log(JSON.parse(obj1).color1);
+
+
+
+    return score;
+}
+
 function Results(){
     let symbolArray = JSON.parse(sessionStorage.getItem("clickedSymbols"));
     let timeArray = JSON.parse(sessionStorage.getItem("clickTimes"));
     let copyGoalChars = JSON.parse(sessionStorage.getItem('goalChars'));
 
-    document.getElementById("GoalChar").textContent = "GOAL \n" + JSON.stringify(copyGoalChars);
+    //PROGRAMMING PHASE RESULTS
+    for(let i = 0; i < copyGoalChars.length; i++){
+        console.log("GoalChar" + i);
+        document.getElementById("GoalChar" + i).textContent = "Goal Stimuli " + (i+1) + "\n" + JSON.stringify(copyGoalChars[i]);
+        document.getElementById("ChosenChar" + i).textContent = "Chosen Stimuli " + (i+1) + "\n" + JSON.stringify(symbolArray[i]) ;
+    }
+
+    //TESTING PHASE RESULTS
+    for(let i=0; i < (symbolArray.length - copyGoalChars.length); i++){
+        let newIndex = i + copyGoalChars.length //SKIPS OVER THE SYMBOLS IN THE PROGRAMMING PHASE
+        document.getElementById("TestedChar" + i).textContent = "Testing Stimuli " + (i+1) + "\n" + JSON.stringify(symbolArray[newIndex]);
+    }
 
     document.getElementById("ProgrammingResults").textContext = "Clicked Symbols \n" + JSON.stringify(symbolArray[0])
 
