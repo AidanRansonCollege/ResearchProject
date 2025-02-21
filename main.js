@@ -292,6 +292,9 @@ function Draw(ctx, symbol, width, height){
         }
         actx.stroke();
     }
+    else if(symbol.shape1 == "triangle"){
+        actx.beginPath(width/4, width/4);
+    }
     else{
         actx.beginPath();
         actx.font = width/2 + "px Arial";
@@ -467,7 +470,7 @@ const LinearB17 = new Symbol("𐀓", color1, null, color2, null, null);
 const LinearB18 = new Symbol("𐀩", color1, null, color2, null, null);
 const LinearB19 = new Symbol("𐁔", color1, null, color2, null, null);
 const LinearB20 = new Symbol("𐀢", color1, null, color2, null, null);
-const LinearB21 = new Symbol("𐀀", color1, null, color2, null, null);
+const LinearB21 = new Symbol("𐀙", color1, null, color2, null, null);
 const LinearB22 = new Symbol("𐀹", color1, null, color2, null, null);
 const LinearB23 = new Symbol("𐀞", color1, null, color2, null, null);
 const LinearB24 = new Symbol("𐀿", color1, null, color2, null, null);
