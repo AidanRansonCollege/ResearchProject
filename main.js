@@ -89,12 +89,12 @@ function SaveSettings(){
         localStorage.setItem("colorValue", colorValue);
     }
 
-    if(document.getElementById("CheckLine").checked == true){
-        localStorage.setItem(lineOption, true);
+
+    if(document.getElementById("CharacterOption").value != ""){
+        let characterOption = document.getElementById("CharacterOption").value;
+        localStorage.setItem("CharacterOption", characterOption);
     }
-    else{
-        localStorage.setItem(lineOption, false);
-    }
+
     DisplaySettings();
 }
 
@@ -103,16 +103,10 @@ function DisplaySettings(){
     document.getElementById("DropColor").value = localStorage.getItem("colorValue");
     
 
-    if(localStorage.getItem(lineOption) == "true"){
-        document.getElementById("CheckLine").checked = true;
-    }
-    else{
-        document.getElementById("CheckLine").checked = false;
-    }
-    
-
     document.getElementById("Iterations").textContent = "Iterations: " + localStorage.getItem(iterations);
-    document.getElementById("Lines").textContent = "Lines Enabled: " + localStorage.getItem(lineOption);
+
+    console.log(localStorage.getItem("CharacterOption"));
+    document.getElementById("Lines").textContent = "Character set: " + document.getElementById("CharacterOption").options[localStorage.getItem("CharacterOption")].text;
     document.getElementById("Color").textContent = "Color is: " + localStorage.getItem("colorValue");
 }
 
@@ -298,6 +292,11 @@ function Draw(ctx, symbol, width, height){
         }
         actx.stroke();
     }
+    else{
+        actx.beginPath();
+        actx.font = width/2 + "px Arial";
+        actx.fillText(symbol.shape1, 5 * width/16, width - 3 * width/8);
+    }
 
     actx.strokeStyle = symbol.color2;
 
@@ -476,6 +475,7 @@ const LinearB24 = new Symbol("𐀿", color1, null, color2, null, null);
 
 var noLine = [Square1, Square2, Square3, Square4, Square5, Square6, Square7, Square8, Square9, Square10, Square11, Square12, Circle1, Circle2, Circle3, Circle4, Circle5, Circle6, Circle7, Circle8, Circle9, Circle10, Circle11, Circle12];
 var yesLine = [Square1, Square2, Square3, Square4, Square5, Square6, Square7, Square8, Square9, Square10, Square11, Square12, Circle1, Circle2, Circle3, Circle4, Circle5, Circle6, Circle7, Circle8, Circle9, Circle10, Circle11, Circle12, Square1Line, Square2Line, Square3Line, Square4Line, Square5Line, Square6Line, Square7Line, Square8Line, Square9Line, Square10Line, Square11Line, Square12Line, Circle1Line, Circle2Line, Circle3Line, Circle4Line, Circle5Line, Circle6Line, Circle7Line, Circle8Line, Circle9Line, Circle10Line, Circle11Line, Circle12Line]
+var LinearB = [LinearB1, LinearB2, LinearB3, LinearB4, LinearB5, LinearB6, LinearB7, LinearB8, LinearB9, LinearB10, LinearB11, LinearB12, LinearB13, LinearB14, LinearB15, LinearB16, LinearB17, LinearB18, LinearB19, LinearB20, LinearB21, LinearB22, LinearB23, LinearB24]
 
 var availableChars;
 
@@ -513,20 +513,19 @@ function Start(){
         sessionStorage.setItem(iterations, 3);
     }
 
-    if(localStorage.getItem(lineOption) == null){
-        sessionStorage.setItem(lineOption, false);
+    if(localStorage.getItem("CharacterOption") == null){
+        sessionStorage.setItem("CharacterOption", 1);
     }
 
-    let lineOptionLocal = localStorage.getItem(lineOption);
+    let CharacterSet = localStorage.getItem("CharacterOption");
     let iterationsLocal = localStorage.getItem(iterations);
     
-    if(lineOptionLocal == "true"){
+    if(CharacterSet == 0){
         console.log("HAS LINES");
-        availableChars = yesLine;
-    }
-    else{
-        console.log("NO LINES");
         availableChars = noLine;
+    }
+    else if(CharacterSet == 1){
+        availableChars = LinearB;
     }
 
     extraChars = availableChars;
