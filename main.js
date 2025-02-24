@@ -267,6 +267,7 @@ function Draw(ctx, symbol, width, height){
     actx.lineWidth = 4;
 
     actx.strokeStyle = symbol.color1;
+    actx.fillStyle = "black";
     
 
     ///// SHAPE 1 //////////
@@ -297,7 +298,7 @@ function Draw(ctx, symbol, width, height){
     }
     else{
         actx.beginPath();
-        actx.font = width/2 + "px Arial";
+        actx.font = Math.floor(width/2) + "px Arial";
         actx.fillText(symbol.shape1, 5 * width/16, width - 3 * width/8);
     }
 
