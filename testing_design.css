@@ -21,12 +21,48 @@
 .button-wrapper{
     display: flex;
     flex-wrap: wrap;
-    height: 80%;
+    height: 90%;
     width: 100%;
     flex-direction: column;
     justify-content: space-between;
 }
+
 .button{
-    flex-basis: 30%;
+    flex-basis: 33.333%;
     font-size: 4em;
+    background: none;
+    border: none;
+}
+
+.row-wrapper{
+    display: flex;
+    height: 30%;
+    width: 100%;
+    flex-direction: row;
+    justify-content: space-between;
+}
+
+.container{
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+    width: 100%;
+}
+
+canvas{
+    margin-right: auto;
+    margin-left: auto;
+    display: block;
+}
+
+.donebutton:disabled{
+    color: rgb(0, 0, 0, 0);
+    background-color: rgb(0, 0, 0, 0);
+    border-color: rgb(0, 0, 0, 0);
+}
+
+.donebutton:enabled{
+    color: rgba(109, 105, 105, 100);
+    background-color: rgba(183, 179, 179, 100);
+    border-color: rgba(61, 61, 61, 100);
 }

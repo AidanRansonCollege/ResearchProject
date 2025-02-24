@@ -1,0 +1,50 @@
+<html>
+    <head>
+
+    </head>
+
+    <body>
+        <h1> Settings </h1>
+        <button onclick="WelcomeButton()">Back</button>
+        <button onclick="SaveSettings()">Save</button>
+        <h2> Number of encoding phase stimuli</h2>
+
+
+
+        <select name="Index" id="DropIndex"> 
+            <option></option>
+            <option value="1">1</option>
+            <option value="2">2</option>
+            <option value="3">3</option>
+        </select>
+
+        <h2>Color of Shapes</h2>
+
+        <select name="Color" id="DropColor">
+            <option></option>
+            <option value="1">Blue Red</option>
+            <option value="2">Yellow Blue</option>
+            <option value="3">Orange Purple</option>
+        </select>
+
+        <h2> Lines</h2>
+
+        <select name="Characters" id="CharacterOption">
+            <option value="0">Circles and Squares</option>
+            <option value="1">Linear B</option>
+            <option value="2">Triangles and Lines</option>
+            <option value="3">Arrow</option>
+        </select>
+
+        <div id="currentValues">
+            <h1> Current Values</h1>
+            <a id="Iterations">Number of encoding phase stimuli: </a>
+            <br>
+            <a id="Lines">Lines Enabled: </a>
+            <br>
+            <a id="Color"></a>
+        </div>
+
+        <script src="/main.js" onload="DisplaySettings()"></script>
+    </body>
+</html>
