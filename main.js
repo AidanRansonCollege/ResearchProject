@@ -294,7 +294,19 @@ function Draw(ctx, symbol, width, height){
         actx.stroke();
     }
     else if(symbol.shape1 == "triangle"){
-        actx.beginPath(width/4, width/4);
+
+        actx.beginPath();
+        actx.moveTo(width/4, width/4);
+        actx.lineTo(width-width/4, width/4);
+        actx.lineTo(width/2, width-width/4);
+        actx.lineTo(width/4, width/4);
+        
+        if(symbol.line == true){
+            actx.moveTo(width/2, width - width/4);
+            actx.lineTo(width/2, width/4);
+        }
+        actx.stroke();
+
     }
     else{
         actx.beginPath();
@@ -323,6 +335,15 @@ function Draw(ctx, symbol, width, height){
             actx.arc(width/8 + 2, width/2, width/8 - 2, 0, 2* Math.PI);
             actx.stroke();
         }
+        else if(symbol.shape2 == "triangle"){
+            actx.beginPath();
+            actx.moveTo(width/4, width/2);
+            actx.lineTo(width/4, width * (3/8));
+            actx.lineTo(width/4 - width * (1/8), width/2);
+            actx.lineTo(width/4, width * (5/8));
+            actx.lineTo(width/4, width/2);
+            actx.stroke();
+        }
     }
     else if(symbol.shape2pos == "right"){
         if(symbol.shape2 == "square"){
@@ -338,6 +359,15 @@ function Draw(ctx, symbol, width, height){
         else if(symbol.shape2 == "circle"){
             actx.beginPath();
             actx.arc(width - width/8 - 2, width -  width/2, width/8 - 2, 0, 2* Math.PI);
+            actx.stroke();
+        }
+        else if(symbol.shape2 == "triangle"){
+            actx.beginPath();
+            actx.moveTo(width - width/4, width/2);
+            actx.lineTo(width - width/4, width * (3/8));
+            actx.lineTo(width - width/4 + width * (1/8), width/2);
+            actx.lineTo(width - width/4, width * (5/8));
+            actx.lineTo(width - width/4, width/2);
             actx.stroke();
         }
     }
@@ -357,6 +387,14 @@ function Draw(ctx, symbol, width, height){
             actx.arc(width/2, width/8 + 2, width/8 - 2, 0, 2* Math.PI);
             actx.stroke();
         }
+        else if(symbol.shape2 == "triangle"){
+            actx.beginPath();
+            actx.moveTo(width * (3/8), width/4);
+            actx.lineTo(width/2, width * (1/8));
+            actx.lineTo(width * (5/8), width/4);
+            actx.lineTo(width * (3/8), width/4);
+            actx.stroke();
+        }
     }
     else if(symbol.shape2pos == "lower"){
         if(symbol.shape2 == "square"){
@@ -374,6 +412,14 @@ function Draw(ctx, symbol, width, height){
             actx.beginPath();
             actx.arc(width/2,width - width/8 - 2, width/8 - 2, 0, 2* Math.PI);
             actx.stroke(); 
+        }
+        else if(symbol.shape2 == "triangle"){
+            actx.beginPath();
+            actx.moveTo(width * (3/8), width - width/4);
+            actx.lineTo(width/2, width - width * (1/8));
+            actx.lineTo(width * (5/8), width - width/4);
+            actx.lineTo(width * (3/8), width - width/4);
+            actx.stroke();
         }
     }
 
@@ -426,31 +472,6 @@ const Circle10 = new Symbol("circle", color2, "square", color2, "upper", false);
 const Circle11 = new Symbol("circle", color2, "square", color2, "right", false);
 const Circle12 = new Symbol("circle", color2, "square", color2, "left", false);
 
-const Square1Line = new Symbol("square", color1, "circle", color2, "lower", true);
-const Square2Line = new Symbol("square", color1, "circle", color2, "upper", true);
-const Square3Line = new Symbol("square", color1, "circle", color2, "right", true);
-const Square4Line = new Symbol("square", color1, "circle", color2, "left", true);
-const Square5Line = new Symbol("square", color1, "circle", color1, "lower", true);
-const Square6Line = new Symbol("square", color1, "circle", color1, "upper", true);
-const Square7Line = new Symbol("square", color1, "circle", color1, "right", true);
-const Square8Line = new Symbol("square", color1, "circle", color1, "left", true);
-const Square9Line = new Symbol("square", color2, "circle", color2, "lower", true);
-const Square10Line = new Symbol("square", color2, "circle", color2, "upper", true);
-const Square11Line = new Symbol("square", color2, "circle", color2, "right", true);
-const Square12Line = new Symbol("square", color2, "circle", color2, "left", true);
-const Circle1Line = new Symbol("circle", color1, "square", color2, "lower", true);
-const Circle2Line = new Symbol("circle", color1, "square", color2, "upper", true);
-const Circle3Line = new Symbol("circle", color1, "square", color2, "right", true);
-const Circle4Line = new Symbol("circle", color1, "square", color2, "left", true);
-const Circle5Line = new Symbol("circle", color1, "square", color1, "lower", true);
-const Circle6Line = new Symbol("circle", color1, "square", color1, "upper", true);
-const Circle7Line = new Symbol("circle", color1, "square", color1, "right", true);
-const Circle8Line = new Symbol("circle", color1, "square", color1, "left", true);
-const Circle9Line = new Symbol("circle", color2, "square", color2, "lower", true);
-const Circle10Line = new Symbol("circle", color2, "square", color2, "upper", true);
-const Circle11Line = new Symbol("circle", color2, "square", color2, "right", true);
-const Circle12Line = new Symbol("circle", color2, "square", color2, "left", true);
-
 const LinearB1 = new Symbol("𐀀", color1, null, color2, null, null);
 const LinearB2 = new Symbol("𐀁", color1, null, color2, null, null);
 const LinearB3 = new Symbol(" 𐀂", color1, null, color2, null, null);
@@ -476,11 +497,72 @@ const LinearB22 = new Symbol("𐀹", color1, null, color2, null, null);
 const LinearB23 = new Symbol("𐀞", color1, null, color2, null, null);
 const LinearB24 = new Symbol("𐀿", color1, null, color2, null, null);
 
+const Triangle1 = new Symbol("triangle", color1, null, color2, null, true);
+const Triangle2 = new Symbol("triangle", color1, "triangle", color1, "lower", true);
+const Triangle3 = new Symbol("triangle", color1, "triangle", color1, "upper", true);
+const Triangle4 = new Symbol("triangle", color1, "triangle", color1, "right", true);
+const Triangle5 = new Symbol("triangle", color1, "triangle", color1, "left", true);
+const Triangle6 = new Symbol("triangle", color1, "triangle", color2, "lower", true);
+const Triangle7 = new Symbol("triangle", color1, "triangle", color2, "upper", true);
+const Triangle8 = new Symbol("triangle", color1, "triangle", color2, "right", true);
+const Triangle9 = new Symbol("triangle", color1, "triangle", color2, "left", true);
+const Triangle10 = new Symbol("triangle", color2, "triangle", color2, "lower", true);
+const Triangle11 = new Symbol("triangle", color2, "triangle", color2, "upper", true);
+const Triangle12 = new Symbol("triangle", color2, "triangle", color2, "right", true);
+const Triangle13 = new Symbol("triangle", color2, "triangle", color2, "left", true);
+const Triangle14 = new Symbol("triangle", color2, "triangle", color1, "lower", true);
+const Triangle15 = new Symbol("triangle", color2, "triangle", color1, "upper", true);
+const Triangle16 = new Symbol("triangle", color2, "triangle", color1, "right", true);
+const Triangle17 = new Symbol("triangle", color2, "triangle", color1, "left", true);
+const Triangle18 = new Symbol("triangle", color2, null, color2, null, true);
+const Triangle19 = new Symbol("triangle", color1, null, color2, null, false);
+const Triangle20 = new Symbol("triangle", color1, "triangle", color1, "lower", false);
+const Triangle21 = new Symbol("triangle", color1, "triangle", color1, "upper", false);
+const Triangle22 = new Symbol("triangle", color1, "triangle", color1, "right", false);
+const Triangle23 = new Symbol("triangle", color1, "triangle", color1, "left", false);
+const Triangle24 = new Symbol("triangle", color1, "triangle", color2, "lower", false);
+const Triangle25 = new Symbol("triangle", color1, "triangle", color2, "upper", false);
+const Triangle26 = new Symbol("triangle", color1, "triangle", color2, "right", false);
+const Triangle27 = new Symbol("triangle", color1, "triangle", color2, "left", false);
+const Triangle28 = new Symbol("triangle", color2, "triangle", color2, "lower", false);
+const Triangle29 = new Symbol("triangle", color2, "triangle", color2, "upper", false);
+const Triangle30 = new Symbol("triangle", color2, "triangle", color2, "right", false);
+const Triangle31 = new Symbol("triangle", color2, "triangle", color2, "left", false);
+const Triangle32 = new Symbol("triangle", color2, "triangle", color1, "lower", false);
+const Triangle33 = new Symbol("triangle", color2, "triangle", color1, "upper", false);
+const Triangle34 = new Symbol("triangle", color2, "triangle", color1, "right", false);
+const Triangle35 = new Symbol("triangle", color2, "triangle", color1, "left", false);
+const Triangle36 = new Symbol("triangle", color2, null, color2, null, false);
+
+const Arrow1 = new Symbol("⬼", color1, null, color2, null, null);
+const Arrow2 = new Symbol("⬻", color1, null, color2, null, null);
+const Arrow3 = new Symbol("⬺", color1, null, color2, null, null);
+const Arrow4 = new Symbol("⬹", color1, null, color2, null, null);
+const Arrow5 = new Symbol("⬸", color1, null, color2, null, null);
+const Arrow6 = new Symbol("⬷", color1, null, color2, null, null);
+const Arrow7 = new Symbol("⬶", color1, null, color2, null, null);
+const Arrow8 = new Symbol("⬽", color1, null, color2, null, null);
+const Arrow9 = new Symbol("⬵", color1, null, color2, null, null);
+const Arrow10 = new Symbol("⬴", color1, null, color2, null, null);
+const Arrow11 = new Symbol("⥓", color1, null, color2, null, null);
+const Arrow12= new Symbol("⥒", color1, null, color2, null, null);
+const Arrow13 = new Symbol("⭌", color1, null, color2, null, null);
+const Arrow14 = new Symbol("⭋", color1, null, color2, null, null);
+const Arrow15 = new Symbol("⭊", color1, null, color2, null, null);
+const Arrow16 = new Symbol("⭉", color1, null, color2, null, null);
+const Arrow17 = new Symbol("⭈", color1, null, color2, null, null);
+const Arrow18 = new Symbol("⭇", color1, null, color2, null, null);
+const Arrow19 = new Symbol("⭆", color1, null, color2, null, null);
+const Arrow20 = new Symbol("⭅", color1, null, color2, null, null);
+const Arrow21 = new Symbol("⭄", color1, null, color2, null, null);
+const Arrow22 = new Symbol("⭂", color1, null, color2, null, null);
+const Arrow23 = new Symbol("⭁", color1, null, color2, null, null);
+const Arrow24 = new Symbol("⬾", color1, null, color2, null, null);
 
 var noLine = [Square1, Square2, Square3, Square4, Square5, Square6, Square7, Square8, Square9, Square10, Square11, Square12, Circle1, Circle2, Circle3, Circle4, Circle5, Circle6, Circle7, Circle8, Circle9, Circle10, Circle11, Circle12];
-var yesLine = [Square1, Square2, Square3, Square4, Square5, Square6, Square7, Square8, Square9, Square10, Square11, Square12, Circle1, Circle2, Circle3, Circle4, Circle5, Circle6, Circle7, Circle8, Circle9, Circle10, Circle11, Circle12, Square1Line, Square2Line, Square3Line, Square4Line, Square5Line, Square6Line, Square7Line, Square8Line, Square9Line, Square10Line, Square11Line, Square12Line, Circle1Line, Circle2Line, Circle3Line, Circle4Line, Circle5Line, Circle6Line, Circle7Line, Circle8Line, Circle9Line, Circle10Line, Circle11Line, Circle12Line]
 var LinearB = [LinearB1, LinearB2, LinearB3, LinearB4, LinearB5, LinearB6, LinearB7, LinearB8, LinearB9, LinearB10, LinearB11, LinearB12, LinearB13, LinearB14, LinearB15, LinearB16, LinearB17, LinearB18, LinearB19, LinearB20, LinearB21, LinearB22, LinearB23, LinearB24]
-
+var Triangle = [Triangle1, Triangle2, Triangle3, Triangle4, Triangle5, Triangle6, Triangle7, Triangle8, Triangle9, Triangle10, Triangle11, Triangle12, Triangle13, Triangle14, Triangle15, Triangle16, Triangle17, Triangle18, Triangle19, Triangle20, Triangle21, Triangle22, Triangle23, Triangle24, Triangle25, Triangle26, Triangle27, Triangle28, Triangle29, Triangle30, Triangle31, Triangle33, Triangle34, Triangle35, Triangle36];
+var Arrow = [Arrow1, Arrow, Arrow2, Arrow3, Arrow4, Arrow5, Arrow6, Arrow7, Arrow8, Arrow9, Arrow10, Arrow11, Arrow12, Arrow13, Arrow14, Arrow15, Arrow16, Arrow17, Arrow18, Arrow19, Arrow20, Arrow21, Arrow22, Arrow23, Arrow24];
 var availableChars;
 
 
@@ -531,6 +613,12 @@ function Start(){
     else if(CharacterSet == 1){
         availableChars = LinearB;
     }
+    else if(CharacterSet == 2){
+        availableChars = Triangle;
+    }
+    else if(CharacterSet == 3){
+        availableChars = Arrow;
+    }
 
     extraChars = availableChars;
     for(let i = 0; i < iterationsLocal; i++){
@@ -546,7 +634,7 @@ function Start(){
 function ProgrammingPhase(currentIndex){
     ResizeCanvas();
     ///////////////////////// ASSIGN IMPORTANT VARIABLES ////////////////////////
-    startTime = new Date();
+ startTime = new Date();
     let copyExtraChars = JSON.parse(sessionStorage.getItem(extraChars)).slice();
 
     var buttons = document.getElementsByClassName("button");
@@ -598,7 +686,7 @@ function ProgrammingPhase(currentIndex){
 
 function TestingPhase(){
 
-    startTime = new Date();
+ startTime = new Date();
 
     let doneButton = document.getElementById("DoneButton");
     doneButton.disabled = true;
