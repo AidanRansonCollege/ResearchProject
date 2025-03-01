@@ -30,7 +30,16 @@ class Symbol {
     }
 }
 
+function GenerateTest(){
+    let S1, S2, S3;
+    let F1, F2, F3, F4, F5, F6;
 
+    Test = [[S1, F1, F2],
+            [S2, F3, F4],
+            [S3, F5, F6]]
+
+    sessionStorage.setItem("Test", JSON.stringify(Test));
+}
 
 //////////////////////// Canvas Function //////////////////////
 
