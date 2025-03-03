@@ -30,16 +30,6 @@ class Symbol {
     }
 }
 
-function GenerateTest(){
-    let S1, S2, S3;
-    let F1, F2, F3, F4, F5, F6;
-
-    Test = [[S1, F1, F2],
-            [S2, F3, F4],
-            [S3, F5, F6]]
-
-    sessionStorage.setItem("Test", JSON.stringify(Test));
-}
 
 //////////////////////// Canvas Function //////////////////////
 
@@ -599,6 +589,32 @@ function DoneTesting(){
 
 //////////////////////////////////// Phases ////////////////////////////////////////////////////
 
+
+function GenerateTest(){
+    let S1, S2, S3;
+    let F1, F2, F3, F4, F5, F6, F7, F8, F9;
+
+    S1 = Triangle1;
+    S2 = Square1;
+    S3 = LinearB1;
+    F1 = Triangle2;
+    F2 = Triangle3;
+    F3 = Triangle4;
+    F4 = Square2;
+    F5 = Square3;
+    F6 = Square4;
+    F7 = LinearB2;
+    F8 = LinearB3;
+    F9 = LinearB4;
+
+    Test = [[F1, F2, F3, S1],
+            [F4, F5, F6, S2],
+            [F7, F8, F9, S3]]
+
+    sessionStorage.setItem("Test", JSON.stringify(Test));
+}
+
+
 function Start(){
     let temparray = [];
     sessionStorage.setItem("clickedSymbols", JSON.stringify(temparray));
@@ -636,6 +652,7 @@ function Start(){
         extraChars.splice(randomIndex, 1);
     }
 
+    GenerateTest();
     sessionStorage.setItem(extraChars, JSON.stringify(extraChars));
     ProgrammingPhase(index);
 }
@@ -643,8 +660,8 @@ function Start(){
 function ProgrammingPhase(currentIndex){
     ResizeCanvas();
     ///////////////////////// ASSIGN IMPORTANT VARIABLES ////////////////////////
- startTime = new Date();
-    let copyExtraChars = JSON.parse(sessionStorage.getItem(extraChars)).slice();
+    startTime = new Date();
+    let copyTest = JSON.parse(sessionStorage.getItem("Test"));
 
     var buttons = document.getElementsByClassName("button");
     const canvases = [
@@ -667,28 +684,25 @@ function ProgrammingPhase(currentIndex){
     tempIndexes = [];
 
     for(let i = 0; i < buttons.length; i++){
-        let randomIndex = Math.floor(Math.random() * copyExtraChars.length);
         let ctx = canvases[i].getContext("2d");
-        Draw(ctx, copyExtraChars[randomIndex], canvases[i].width, canvases[i].height);
-        tempIndexes[i] = copyExtraChars[randomIndex];
-        copyExtraChars.splice(randomIndex, 1);
+        Draw(ctx, copyTest[currentIndex][i], canvases[i].width, canvases[i].height);
         buttons[i].addEventListener("click", IncorrectProgramming);
     }
 
-    ///////////////////////// DRAW CORRECT BUTTONS ////////////////////////
+    ///////////////////////// DRAW CORRECT BUTTON ////////////////////////
     let trueButtonIndex = Math.floor(Math.random() * buttons.length);
     let trueButton = buttons[trueButtonIndex];
     let trueCanvas = canvases[trueButtonIndex];
-    tempIndexes[trueButtonIndex] = goalChars[currentIndex];
     let ctx = trueCanvas.getContext("2d");
     ctx.clearRect(0,0, trueCanvas.width, trueCanvas.height);
-    Draw(ctx, goalChars[currentIndex], trueCanvas.width, trueCanvas.height);
-    let ctx2 = canvases[3].getContext("2d");
-    Draw(ctx2, goalChars[currentIndex], canvases[3].width, canvases[3].height);
+    Draw(ctx, copyTest[currentIndex][3], trueCanvas.width, trueCanvas.height);
     trueButton.removeEventListener("click", IncorrectProgramming);
     trueButton.addEventListener("click", CorrectProgramming);
 
-    console.log(goalChars);
+    ///////////////////////// DRAW TARGET AT TOP OF SCREEN //////////////////////////
+    let ctx2 = canvases[3].getContext("2d");
+    Draw(ctx2, copyTest[currentIndex][3], canvases[3].width, canvases[3].height);
+    
 }
 
 
@@ -700,8 +714,7 @@ function TestingPhase(){
     let doneButton = document.getElementById("DoneButton");
     doneButton.disabled = true;
     ResizeCanvas();
-    let copyGoalChars = JSON.parse(sessionStorage.getItem('goalChars'));
-    let copyExtraChars = JSON.parse(sessionStorage.getItem('extraChars')).slice();
+    let copyTest = JSON.parse(sessionStorage.getItem("Test"));
 
 
     var buttons = document.getElementsByClassName("button");
@@ -718,36 +731,38 @@ function TestingPhase(){
     ];
 
     tempIndexes = [];
+    let canvascounter =0
 
-    for(let i = 0; i< buttons.length; i++){
-        let randomIndex = Math.floor(Math.random() * copyExtraChars.length)
-        ctx = canvases[i].getContext("2d");
-        Draw(ctx, copyExtraChars[randomIndex], canvases[i].width, canvases[i].height);
-        tempIndexes[i] = copyExtraChars[randomIndex];
-        copyExtraChars.splice(randomIndex, 1);
-        buttons[i].addEventListener("click", IncorrectTesting);
+    for(let i = 0; i< 3; i++){
+        for(let j = 0; j<3; j++){
+            ctx = canvases[canvascounter].getContext("2d");
+            Draw(ctx, copyTest[i][j], canvases[canvascounter].width, canvases[canvascounter].height);
+            buttons[canvascounter].addEventListener("click", IncorrectTesting);
+            canvascounter+=1;
+        }
+
     }
 
 
-    let trueButtonIndexes = NonRepeatingValues(copyGoalChars.length);
     
-    for(let i=0; i<trueButtonIndexes.length; i++){
-        var trueButton = buttons[trueButtonIndexes[i]];
-        var trueCanvas = canvases[trueButtonIndexes[i]];
+    
+    for(let i=0; i<3; i++){
+        let trueButtonIndex = Math.floor(Math.random() * 3 + (i*3));
+
+        var trueButton = buttons[trueButtonIndex];
+        var trueCanvas = canvases[trueButtonIndex];
         ctx = trueCanvas.getContext("2d");
         ctx.clearRect(0,0, trueCanvas.width, trueCanvas.height);
-        tempIndexes[trueButtonIndexes[i]] = copyGoalChars[i];
-        Draw(ctx, copyGoalChars[i], trueCanvas.width, trueCanvas.height);
+        Draw(ctx, copyTest[i][3], trueCanvas.width, trueCanvas.height);
         trueButton.removeEventListener("click", IncorrectTesting);
         trueButton.addEventListener("click", CorrectTesting);
     }
+        
 }
 
 function resultsScore(obj1, obj2){
     let score = 0;
     console.log(JSON.parse(obj1).color1);
-
-
 
     return score;
 }
