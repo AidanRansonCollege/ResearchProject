@@ -1,3 +1,29 @@
+var currentindex: number = 0;
+
+function ResizeCanvases(){
+    let container: HTMLCollectionOf<HTMLElement> = document.getElementsByClassName('container') as HTMLCollectionOf<HTMLElement>;
+    let canvas: HTMLCollectionOf<HTMLCanvasElement> = document.getElementsByClassName('canvas') as HTMLCollectionOf<HTMLCanvasElement>;
+
+    for(let i = 0; i < container.length; i++){
+        let width = container[i].offsetWidth;
+        let height = container[i].offsetHeight;
+        if(width <= height){
+            canvas[i].width = width;
+            canvas[i].height = width;
+        }
+        else{
+            canvas[i].width = height;
+            canvas[i].height = height;
+        }
+    }
+
+    canvas[0].width = canvas[1].width;
+    canvas[0].height = canvas[1].height;
+}
+
+
+
+
 class Target{
     shape1: string;
     shape2: string;
@@ -55,7 +81,6 @@ function GenerateTestLocal(){
     let F8: Target;
     let F9: Target;
 
-
     S1 = TriangleA;
     F1 = TriangleB;
     F2 = TriangleC;
@@ -72,9 +97,224 @@ function GenerateTestLocal(){
     F9 = LinearBD;
 
     let Test: Target[] = [];
+    Test = [S1, F1, F2, F3, S2, F4, F5, F6, S3, F7, F8, F9];
+    sessionStorage.setItem("Test", JSON.stringify(Test));
 }
 
-function StartPhase(){
+function DrawTarget(ctx: CanvasRenderingContext2D, symbol: Target, width: number): void{
+    var actx = ctx;
+    actx.lineWidth = 4;
 
+    actx.strokeStyle = symbol.color1;
+    actx.fillStyle = "black";
     
+
+    ///// SHAPE 1 //////////
+    if(symbol.shape1 == "square"){
+        actx.beginPath();
+        actx.moveTo(width/4, width/4);
+        actx.lineTo(width/4, width - width/4);
+        actx.lineTo(width - width/4, width - width/4);
+        actx.lineTo(width - width/4, width/4);
+        actx.lineTo(width/4, width/4);
+        if(symbol.line == true){
+            actx.lineTo(width - width/4, width - width/4);
+        }
+        actx.stroke();
+    }
+    else if(symbol.shape1 == "circle"){
+        actx.beginPath();
+        actx.arc(width/2, width/2, width/4, 0, 2 * Math.PI);
+        if(symbol.line == true){
+            actx.moveTo(width/2 - width/4 * Math.cos(Math.PI/4), width/2 + width/4 * Math.sin(Math.PI/4));
+            actx.lineTo(width/2 + width/4 * Math.cos(Math.PI/4), width/2 - width/4 * Math.sin(Math.PI/4));
+            console.log("LINE DRAWN");
+        }
+        actx.stroke();
+    }
+    else if(symbol.shape1 == "triangle"){
+
+        actx.beginPath();
+        actx.moveTo(width/4, width/4);
+        actx.lineTo(width-width/4, width/4);
+        actx.lineTo(width/2, width-width/4);
+        actx.lineTo(width/4, width/4);
+        
+        if(symbol.line == true){
+            actx.moveTo(width/2, width - width/4);
+            actx.lineTo(width/2, width/4);
+        }
+        actx.stroke();
+
+    }
+    else{
+        actx.beginPath();
+        actx.font = Math.floor(width/2) + "px Arial";
+        actx.fillText(symbol.shape1, 5 * width/16, width - 3 * width/8);
+    }
+
+    actx.strokeStyle = symbol.color2;
+
+
+    ///// SHAPE 2 ///////
+    if(symbol.shape2pos == "left"){
+
+        if(symbol.shape2 == "square"){
+            actx.beginPath();
+            actx.moveTo(width/4, width/2);
+            actx.lineTo(width/4, width * (3/8));
+            actx.lineTo(4, width * (3/8));
+            actx.lineTo(4, width * (5/8));
+            actx.lineTo(width/4, width * (5/8));
+            actx.lineTo(width/4, width/2);
+            actx.stroke();
+        }
+        else if(symbol.shape2 == "circle"){
+            actx.beginPath();
+            actx.arc(width/8 + 2, width/2, width/8 - 2, 0, 2* Math.PI);
+            actx.stroke();
+        }
+        else if(symbol.shape2 == "triangle"){
+            actx.beginPath();
+            actx.moveTo(width/4, width/2);
+            actx.lineTo(width/4, width * (3/8));
+            actx.lineTo(width/4 - width * (1/8), width/2);
+            actx.lineTo(width/4, width * (5/8));
+            actx.lineTo(width/4, width/2);
+            actx.stroke();
+        }
+    }
+    else if(symbol.shape2pos == "right"){
+        if(symbol.shape2 == "square"){
+            actx.beginPath();
+            actx.moveTo(width - width/4, width/2);
+            actx.lineTo(width - width/4, width * (3/8));
+            actx.lineTo(width - 4, width * (3/8));
+            actx.lineTo(width - 4, width * (5/8));
+            actx.lineTo(width - width/4, width * (5/8));
+            actx.lineTo(width - width/4, width/2);
+            actx.stroke();
+        }
+        else if(symbol.shape2 == "circle"){
+            actx.beginPath();
+            actx.arc(width - width/8 - 2, width -  width/2, width/8 - 2, 0, 2* Math.PI);
+            actx.stroke();
+        }
+        else if(symbol.shape2 == "triangle"){
+            actx.beginPath();
+            actx.moveTo(width - width/4, width/2);
+            actx.lineTo(width - width/4, width * (3/8));
+            actx.lineTo(width - width/4 + width * (1/8), width/2);
+            actx.lineTo(width - width/4, width * (5/8));
+            actx.lineTo(width - width/4, width/2);
+            actx.stroke();
+        }
+    }
+    else if(symbol.shape2pos == "upper"){
+        if(symbol.shape2 == "square"){
+            actx.beginPath();
+            actx.moveTo(width/2, width/4);
+            actx.lineTo(width * (3/8), width/4);
+            actx.lineTo(width * (3/8), 4);
+            actx.lineTo(width * (5/8), 4);
+            actx.lineTo(width * (5/8), width/4);
+            actx.lineTo(width/2, width/4);
+            actx.stroke();
+        }
+        else if(symbol.shape2 == "circle"){
+            actx.beginPath();
+            actx.arc(width/2, width/8 + 2, width/8 - 2, 0, 2* Math.PI);
+            actx.stroke();
+        }
+        else if(symbol.shape2 == "triangle"){
+            actx.beginPath();
+            actx.moveTo(width * (3/8), width/4);
+            actx.lineTo(width/2, width * (1/8));
+            actx.lineTo(width * (5/8), width/4);
+            actx.lineTo(width * (3/8), width/4);
+            actx.stroke();
+        }
+    }
+    else if(symbol.shape2pos == "lower"){
+        if(symbol.shape2 == "square"){
+            actx.beginPath();
+            actx.moveTo(width/2, width - width/4);
+            actx.lineTo(width * (3/8),width -  width/4);
+            actx.lineTo(width * (3/8),width -  4);
+            actx.lineTo(width * (5/8),width -  4);
+            actx.lineTo(width * (5/8),width -  width/4);
+            actx.lineTo(width/2,width -  width/4);
+            actx.stroke();
+            
+        }
+        else if(symbol.shape2 == "circle"){
+            actx.beginPath();
+            actx.arc(width/2,width - width/8 - 2, width/8 - 2, 0, 2* Math.PI);
+            actx.stroke(); 
+        }
+        else if(symbol.shape2 == "triangle"){
+            actx.beginPath();
+            actx.moveTo(width * (3/8), width - width/4);
+            actx.lineTo(width/2, width - width * (1/8));
+            actx.lineTo(width * (5/8), width - width/4);
+            actx.lineTo(width * (3/8), width - width/4);
+            actx.stroke();
+        }
+    }
+}
+
+function IncorrectEncoding():void {
+
+}
+
+function CorrectEncoding(): void {
+    
+}
+
+
+function StartPhase(): void{
+    GenerateTest();
+}
+
+function EncodingPhase(): void{
+    ResizeCanvases();
+
+    //Define needed values
+    let startTime: Date = new Date();
+    let copyTest: Target[] = JSON.parse(sessionStorage.getItem("Test")!);
+
+    let buttons: HTMLCollectionOf<HTMLButtonElement> = document.getElementsByClassName("button") as HTMLCollectionOf<HTMLButtonElement>;
+
+    const canvases: HTMLCanvasElement[] = [
+        document.getElementById("canvas1") as HTMLCanvasElement,
+        document.getElementById("canvas2") as HTMLCanvasElement,
+        document.getElementById("canvas3") as HTMLCanvasElement,
+        document.getElementById("canvasGoal") as HTMLCanvasElement
+    ]
+
+
+    //Clear Previous Drawings
+    for(let i = 0; i<canvases.length; i++){
+        let canvas: CanvasRenderingContext2D = canvases[i].getContext("2d")!;
+        canvas.clearRect(0, 0, canvases[i].width, canvases[i].height);
+    }
+
+    //Draw Correct Button
+    let trueButtonIndex: number = Math.floor(Math.random() * buttons.length);
+    let trueButton: HTMLButtonElement = buttons[trueButtonIndex];
+    let trueCanvas: HTMLCanvasElement = canvases[trueButtonIndex];
+    let ctx: CanvasRenderingContext2D = trueCanvas.getContext("2d")!;
+    Draw(ctx, copyTest[3 * currentindex], trueCanvas.width, trueCanvas.height);
+    trueButton.addEventListener("click", CorrectEncoding);
+    //Draw InCorrect Buttons
+
+    for(let i = 0; i < buttons.length; i++){
+        if(i != trueButtonIndex){
+            ctx = canvases[i].getContext("2d")!;
+            Draw(ctx, copyTest[3 * currentindex + (i+1)], canvases[i].width, canvases[i].height);
+            buttons[i].addEventListener("click", IncorrectEncoding);
+        }
+    }
+
+
 }
