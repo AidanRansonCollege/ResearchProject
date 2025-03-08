@@ -19,6 +19,7 @@ var programmingTimes = [];
 
 
 //Class
+
 class Symbol {
     constructor(shape1, color1, shape2, color2, shape2pos, line){
         this.shape1 = shape1;
