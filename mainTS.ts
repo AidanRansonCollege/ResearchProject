@@ -43,6 +43,8 @@ class Target{
 }
 
 
+var color1: string = "#005AB5";
+var color2: string = "#DC3220";
 
 const SquareA = new Target("square", color1, "circle", color2, "lower", false);
 const SquareB = new Target("square", color1, "circle", color2, "upper", false);
@@ -263,17 +265,34 @@ function DrawTarget(ctx: CanvasRenderingContext2D, symbol: Target, width: number
     }
 }
 
+function SettingsButtonTS(){
+    window.location.href = "settings.html";
+}
+
+function StartButtonTS(){
+    window.location.href = "programming.html";
+}
+
+function WelcomeButtonTS(){
+    window.location.href = "Welcome.html";
+}
+
+
+function DoneTestingTS(){
+    window.location.href = "results.html";
+}
+
 function IncorrectEncoding():void {
 
 }
 
 function CorrectEncoding(): void {
-    
+
 }
 
 
 function StartPhase(): void{
-    GenerateTest();
+    GenerateTestLocal();
 }
 
 function EncodingPhase(): void{
@@ -304,14 +323,14 @@ function EncodingPhase(): void{
     let trueButton: HTMLButtonElement = buttons[trueButtonIndex];
     let trueCanvas: HTMLCanvasElement = canvases[trueButtonIndex];
     let ctx: CanvasRenderingContext2D = trueCanvas.getContext("2d")!;
-    Draw(ctx, copyTest[3 * currentindex], trueCanvas.width, trueCanvas.height);
+    DrawTarget(ctx, copyTest[3 * currentindex], trueCanvas.width);
     trueButton.addEventListener("click", CorrectEncoding);
     //Draw InCorrect Buttons
 
     for(let i = 0; i < buttons.length; i++){
         if(i != trueButtonIndex){
             ctx = canvases[i].getContext("2d")!;
-            Draw(ctx, copyTest[3 * currentindex + (i+1)], canvases[i].width, canvases[i].height);
+            DrawTarget(ctx, copyTest[3 * currentindex + (i+1)], canvases[i].width);
             buttons[i].addEventListener("click", IncorrectEncoding);
         }
     }
