@@ -83,6 +83,10 @@ function GenerateTestLocal(){
     let F8: Target;
     let F9: Target;
 
+    let TargetPos1: number;
+    let TargetPos2: number;
+    let TargetPos3: number;
+
     S1 = TriangleA;
     F1 = TriangleB;
     F2 = TriangleC;
@@ -98,8 +102,12 @@ function GenerateTestLocal(){
     F8 = LinearBC;
     F9 = LinearBD;
 
-    let Test: Target[] = [];
-    Test = [S1, F1, F2, F3, S2, F4, F5, F6, S3, F7, F8, F9];
+    TargetPos1 = 1;
+    TargetPos2 = 2;
+    TargetPos3 = 0;
+
+    let Test: (Target | number)[] = [];
+    Test = [S1, F1, F2, F3, S2, F4, F5, F6, S3, F7, F8, F9, TargetPos1, TargetPos2, TargetPos3];
     sessionStorage.setItem("Test", JSON.stringify(Test));
 }
 
@@ -283,11 +291,29 @@ function DoneTestingTS(){
 }
 
 function IncorrectEncoding():void {
-
+    
 }
 
 function CorrectEncoding(): void {
-
+    if(currentindex < 2){
+        currentindex +=1;
+        this.style.backgroundColor = "#CCCCCC";
+        setTimeout(() => {
+            this.style.backgroundColor = "#FFFFFF";
+        }, 250);
+        setTimeout(() => {
+            EncodingPhase();
+        }, 100);
+    }
+    else{
+        this.style.backgroundColor = "#CCCCCC";
+        setTimeout(() => {
+            this.style.backgroundColor = "#FFFFFF";
+        }, 250);
+        setTimeout(() => {
+            window.location.href = "testing.html";
+        }, 100);
+    }
 }
 
 
@@ -301,7 +327,7 @@ function EncodingPhase(): void{
 
     //Define needed values
     let startTime: Date = new Date();
-    let copyTest: Target[] = JSON.parse(sessionStorage.getItem("Test")!);
+    let copyTest: (Target | number)[] = JSON.parse(sessionStorage.getItem("Test")!);
 
     console.log(copyTest);
     let buttons: HTMLCollectionOf<HTMLButtonElement> = document.getElementsByClassName("button") as HTMLCollectionOf<HTMLButtonElement>;
@@ -321,17 +347,17 @@ function EncodingPhase(): void{
     }
 
     //Draw Correct Button
-    let trueButtonIndex: number = Math.floor(Math.random() * buttons.length);
+    let trueButtonIndex: number = copyTest[12 + currentindex] as number;
     let trueButton: HTMLButtonElement = buttons[trueButtonIndex];
     let trueCanvas: HTMLCanvasElement = canvases[trueButtonIndex];
     let ctx: CanvasRenderingContext2D = trueCanvas.getContext("2d")!;
-    DrawTarget(ctx, copyTest[3 * currentindex], trueCanvas.width);
+    DrawTarget(ctx, copyTest[4 * currentindex] as Target, trueCanvas.width);
     trueButton.addEventListener("click", CorrectEncoding);
 
     //Draw Goal
     let goalCanvas: HTMLCanvasElement = canvases[3];
     ctx = goalCanvas.getContext("2d");
-    DrawTarget(ctx, copyTest[3 * currentindex], goalCanvas.width);
+    DrawTarget(ctx, copyTest[4 * currentindex] as Target, goalCanvas.width);
 
 
     //Draw InCorrect Buttons
@@ -339,10 +365,8 @@ function EncodingPhase(): void{
     for(let i = 0; i < buttons.length; i++){
         if(i != trueButtonIndex){
             ctx = canvases[i].getContext("2d")!;
-            DrawTarget(ctx, copyTest[4 * currentindex + i+1], canvases[i].width);
+            DrawTarget(ctx, copyTest[4 * currentindex + i+1] as Target, canvases[i].width);
             buttons[i].addEventListener("click", IncorrectEncoding);
         }
     }
-
-
 }

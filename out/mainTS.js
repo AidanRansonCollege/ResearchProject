@@ -58,6 +58,9 @@ function GenerateTestLocal() {
     let F7;
     let F8;
     let F9;
+    let TargetPos1;
+    let TargetPos2;
+    let TargetPos3;
     S1 = TriangleA;
     F1 = TriangleB;
     F2 = TriangleC;
@@ -70,8 +73,11 @@ function GenerateTestLocal() {
     F7 = LinearBB;
     F8 = LinearBC;
     F9 = LinearBD;
+    TargetPos1 = 1;
+    TargetPos2 = 2;
+    TargetPos3 = 0;
     let Test = [];
-    Test = [S1, F1, F2, F3, S2, F4, F5, F6, S3, F7, F8, F9];
+    Test = [S1, F1, F2, F3, S2, F4, F5, F6, S3, F7, F8, F9, TargetPos1, TargetPos2, TargetPos3];
     sessionStorage.setItem("Test", JSON.stringify(Test));
 }
 function DrawTarget(ctx, symbol, width) {
@@ -239,6 +245,25 @@ function DoneTestingTS() {
 function IncorrectEncoding() {
 }
 function CorrectEncoding() {
+    if (currentindex < 2) {
+        currentindex += 1;
+        this.style.backgroundColor = "#CCCCCC";
+        setTimeout(() => {
+            this.style.backgroundColor = "#FFFFFF";
+        }, 250);
+        setTimeout(() => {
+            EncodingPhase();
+        }, 100);
+    }
+    else {
+        this.style.backgroundColor = "#CCCCCC";
+        setTimeout(() => {
+            this.style.backgroundColor = "#FFFFFF";
+        }, 250);
+        setTimeout(() => {
+            window.location.href = "testing.html";
+        }, 100);
+    }
 }
 function StartPhase() {
     GenerateTestLocal();
@@ -263,16 +288,16 @@ function EncodingPhase() {
         canvas.clearRect(0, 0, canvases[i].width, canvases[i].height);
     }
     //Draw Correct Button
-    let trueButtonIndex = Math.floor(Math.random() * buttons.length);
+    let trueButtonIndex = copyTest[12 + currentindex];
     let trueButton = buttons[trueButtonIndex];
     let trueCanvas = canvases[trueButtonIndex];
     let ctx = trueCanvas.getContext("2d");
-    DrawTarget(ctx, copyTest[3 * currentindex], trueCanvas.width);
+    DrawTarget(ctx, copyTest[4 * currentindex], trueCanvas.width);
     trueButton.addEventListener("click", CorrectEncoding);
     //Draw Goal
     let goalCanvas = canvases[3];
     ctx = goalCanvas.getContext("2d");
-    DrawTarget(ctx, copyTest[3 * currentindex], goalCanvas.width);
+    DrawTarget(ctx, copyTest[4 * currentindex], goalCanvas.width);
     //Draw InCorrect Buttons
     for (let i = 0; i < buttons.length; i++) {
         if (i != trueButtonIndex) {
