@@ -344,7 +344,6 @@ function StartPhase(): void{
 
 function EncodingPhase(): void{
     ResizeCanvases();
-
     //Define needed values
     let startTime: Date = new Date();
     let copyTest: (Target | number)[] = JSON.parse(sessionStorage.getItem("Test")!);
@@ -379,9 +378,7 @@ function EncodingPhase(): void{
     ctx = goalCanvas.getContext("2d");
     DrawTarget(ctx, copyTest[4 * currentindex] as Target, goalCanvas.width);
 
-
     //Draw InCorrect Buttons
-
     for(let i = 0; i < buttons.length; i++){
         if(i != trueButtonIndex){
             ctx = canvases[i].getContext("2d")!;
@@ -389,4 +386,8 @@ function EncodingPhase(): void{
             buttons[i].addEventListener("click", IncorrectEncoding);
         }
     }
+}
+
+function RecognitionPhase(): void{
+    
 }
