@@ -234,7 +234,7 @@ function SettingsButtonTS() {
     window.location.href = "settings.html";
 }
 function StartButtonTS() {
-    window.location.href = "programming.html";
+    window.location.href = "Encoding.html";
 }
 function WelcomeButtonTS() {
     window.location.href = "Welcome.html";
@@ -243,8 +243,7 @@ function DoneTestingTS() {
     window.location.href = "results.html";
 }
 function IncorrectEncoding() {
-}
-function CorrectEncoding() {
+    console.log("INCORRECT" + currentindex);
     if (currentindex < 2) {
         currentindex += 1;
         this.style.backgroundColor = "#CCCCCC";
@@ -261,7 +260,29 @@ function CorrectEncoding() {
             this.style.backgroundColor = "#FFFFFF";
         }, 250);
         setTimeout(() => {
-            window.location.href = "testing.html";
+            window.location.href = "Recognition.html";
+        }, 100);
+    }
+}
+function CorrectEncoding() {
+    console.log("CORRECT" + currentindex);
+    if (currentindex < 2) {
+        currentindex += 1;
+        this.style.backgroundColor = "#CCCCCC";
+        setTimeout(() => {
+            this.style.backgroundColor = "#FFFFFF";
+        }, 250);
+        setTimeout(() => {
+            EncodingPhase();
+        }, 100);
+    }
+    else {
+        this.style.backgroundColor = "#CCCCCC";
+        setTimeout(() => {
+            this.style.backgroundColor = "#FFFFFF";
+        }, 250);
+        setTimeout(() => {
+            window.location.href = "Recognition.html";
         }, 100);
     }
 }
