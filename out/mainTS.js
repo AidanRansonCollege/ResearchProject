@@ -328,3 +328,23 @@ function EncodingPhase() {
         }
     }
 }
+function RecognitionPhase() {
+    let doneButton = document.getElementById("DoneButton");
+    doneButton.disabled = true;
+    ResizeCanvases();
+    let copyTest = JSON.parse(sessionStorage.getItem("Test"));
+    let buttons = document.getElementsByClassName("button");
+    const canvases = [
+        document.getElementById("canvas1"),
+        document.getElementById("canvas2"),
+        document.getElementById("canvas3"),
+        document.getElementById("canvas4"),
+        document.getElementById("canvas5"),
+        document.getElementById("canvas6"),
+        document.getElementById("canvas7"),
+        document.getElementById("canvas8"),
+        document.getElementById("canvas9"),
+    ];
+    copyTest = copyTest.slice(12, 3);
+    console.log(copyTest);
+}

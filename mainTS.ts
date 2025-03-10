@@ -389,5 +389,26 @@ function EncodingPhase(): void{
 }
 
 function RecognitionPhase(): void{
+    let doneButton: HTMLButtonElement = document.getElementById("DoneButton") as HTMLButtonElement;
+    doneButton.disabled = true;
+    ResizeCanvases();
+    let copyTest: (Target | number)[] = JSON.parse(sessionStorage.getItem("Test")!);
+
+    let buttons: HTMLCollectionOf<HTMLButtonElement> = document.getElementsByClassName("button") as HTMLCollectionOf<HTMLButtonElement>;
+    const canvases: HTMLCanvasElement[] = [
+        document.getElementById("canvas1") as HTMLCanvasElement,
+        document.getElementById("canvas2") as HTMLCanvasElement,
+        document.getElementById("canvas3") as HTMLCanvasElement,
+        document.getElementById("canvas4") as HTMLCanvasElement,
+        document.getElementById("canvas5") as HTMLCanvasElement,
+        document.getElementById("canvas6") as HTMLCanvasElement,
+        document.getElementById("canvas7") as HTMLCanvasElement,
+        document.getElementById("canvas8") as HTMLCanvasElement,
+        document.getElementById("canvas9") as HTMLCanvasElement,
+    ];
+
+    copyTest = copyTest.slice(12);
+
+    console.log(copyTest);
     
 }
