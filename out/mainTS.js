@@ -18,7 +18,7 @@ function ResizeCanvases() {
     canvas[0].height = canvas[1].height;
 }
 class Target {
-    constructor(shape1, shape2, color1, color2, shape2pos, line) {
+    constructor(shape1, color1, shape2, color2, shape2pos, line) {
         this.shape1 = shape1;
         this.shape2 = shape2;
         this.color1 = color1;
@@ -242,12 +242,14 @@ function CorrectEncoding() {
 }
 function StartPhase() {
     GenerateTestLocal();
+    EncodingPhase();
 }
 function EncodingPhase() {
     ResizeCanvases();
     //Define needed values
     let startTime = new Date();
     let copyTest = JSON.parse(sessionStorage.getItem("Test"));
+    console.log(copyTest);
     let buttons = document.getElementsByClassName("button");
     const canvases = [
         document.getElementById("canvas1"),
@@ -267,11 +269,15 @@ function EncodingPhase() {
     let ctx = trueCanvas.getContext("2d");
     DrawTarget(ctx, copyTest[3 * currentindex], trueCanvas.width);
     trueButton.addEventListener("click", CorrectEncoding);
+    //Draw Goal
+    let goalCanvas = canvases[3];
+    ctx = goalCanvas.getContext("2d");
+    DrawTarget(ctx, copyTest[3 * currentindex], goalCanvas.width);
     //Draw InCorrect Buttons
     for (let i = 0; i < buttons.length; i++) {
         if (i != trueButtonIndex) {
             ctx = canvases[i].getContext("2d");
-            DrawTarget(ctx, copyTest[3 * currentindex + (i + 1)], canvases[i].width);
+            DrawTarget(ctx, copyTest[4 * currentindex + i + 1], canvases[i].width);
             buttons[i].addEventListener("click", IncorrectEncoding);
         }
     }

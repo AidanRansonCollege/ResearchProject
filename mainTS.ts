@@ -32,7 +32,7 @@ class Target{
     shape2pos: string
     line: boolean;
 
-    public constructor(shape1: string, shape2: string, color1: string, color2: string, shape2pos: string, line: boolean){
+    public constructor(shape1: string, color1: string,  shape2: string,  color2: string, shape2pos: string, line: boolean){
         this.shape1 = shape1;
         this.shape2 = shape2;
         this.color1 = color1;
@@ -293,6 +293,7 @@ function CorrectEncoding(): void {
 
 function StartPhase(): void{
     GenerateTestLocal();
+    EncodingPhase();
 }
 
 function EncodingPhase(): void{
@@ -302,6 +303,7 @@ function EncodingPhase(): void{
     let startTime: Date = new Date();
     let copyTest: Target[] = JSON.parse(sessionStorage.getItem("Test")!);
 
+    console.log(copyTest);
     let buttons: HTMLCollectionOf<HTMLButtonElement> = document.getElementsByClassName("button") as HTMLCollectionOf<HTMLButtonElement>;
 
     const canvases: HTMLCanvasElement[] = [
@@ -325,12 +327,19 @@ function EncodingPhase(): void{
     let ctx: CanvasRenderingContext2D = trueCanvas.getContext("2d")!;
     DrawTarget(ctx, copyTest[3 * currentindex], trueCanvas.width);
     trueButton.addEventListener("click", CorrectEncoding);
+
+    //Draw Goal
+    let goalCanvas: HTMLCanvasElement = canvases[3];
+    ctx = goalCanvas.getContext("2d");
+    DrawTarget(ctx, copyTest[3 * currentindex], goalCanvas.width);
+
+
     //Draw InCorrect Buttons
 
     for(let i = 0; i < buttons.length; i++){
         if(i != trueButtonIndex){
             ctx = canvases[i].getContext("2d")!;
-            DrawTarget(ctx, copyTest[3 * currentindex + (i+1)], canvases[i].width);
+            DrawTarget(ctx, copyTest[4 * currentindex + i+1], canvases[i].width);
             buttons[i].addEventListener("click", IncorrectEncoding);
         }
     }
